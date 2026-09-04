@@ -1,4 +1,4 @@
-# 🎓 Sebastián Castañeda — Personal CV & PhD Research Web
+#  Sebastián Castañeda — Personal CV & PhD Research Web
 
 Sitio web personal y portafolio de investigación para solicitud de **Doctorado (Ph.D.)** en Robótica, Control Automático, Sistemas Inteligentes y Materiales de Industria 4.0.
 
@@ -6,7 +6,7 @@ Alojado de forma nativa e impulsado por **GitHub Pages**.
 
 ---
 
-## ⚡ ¿Cómo publicar tu web en GitHub Pages (Paso a Paso)?
+## ¿Cómo publicar tu web en GitHub Pages (Paso a Paso)?
 
 Como la web está desarrollada con HTML5, CSS3 modular y datos en JavaScript puro, **no requiere ningún proceso de compilación ni configuración compleja**.
 
@@ -37,7 +37,7 @@ git push -u origin main
 
 ---
 
-## ✏️ ¿Cómo hacer cambios y actualizar tu información fácilmente?
+##  ¿Cómo hacer cambios y actualizar tu información fácilmente?
 
 **¡No necesitas tocar código HTML ni CSS para agregar o actualizar tus datos!**
 
