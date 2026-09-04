@@ -10,42 +10,44 @@ document.addEventListener('DOMContentLoaded', () => {
     return;
   }
 
-  // 1. Theme Management (Dark / Light)
+  // 1. Setup Contact Modal Popup IMMEDIATELY so buttons always work
+  initContactModal(data.personal);
+
+  // 2. Theme Management (Dark / Light)
   initTheme();
 
-  // 2. Render Hero & Profile Card (Photo, Age, Links)
+  // 3. Render Hero & Profile Card (Photo, Age, Links)
   renderHero(data.personal);
 
-  // 3. Render Education & Research Groups
+  // 4. Render Education & Research Groups
   renderEducation(data.education, data.researchGroups);
 
-  // 4. Render Research Interests
+  // 5. Render Research Interests
   renderResearchInterests(data.researchInterests);
 
-  // 5. Render Target Research Environments (PhD Strategy)
+  // 6. Render Target Research Environments (PhD Strategy)
   renderTargetEnvironments(data.targetEnvironments);
 
-  // 6. Render Research & Technical Expertise (Toolkit Matrix)
+  // 7. Render Research & Technical Expertise (Toolkit Matrix)
   renderResearchToolkit(data.researchToolkit);
 
-  // 7. Render Scientific Research Projects & Applied Engineering Projects
+  // 8. Render Scientific Research Projects & Applied Engineering Projects
   renderResearchProjects(data.researchProjects);
   renderEngineeringProjects(data.engineeringProjects);
 
-  // 8. Render Publications
+  // 9. Render Publications
   renderPublications(data.publications);
 
-  // 9. Render Languages
+  // 10. Render Languages
   renderLanguages(data.languages);
 
-  // 10. Render Skills
-  renderSkills(data.skills);
+  // 11. Render Skills (Defensive check)
+  if (data.skills) {
+    renderSkills(data.skills);
+  }
 
-  // 11. Render Awards & Leadership
+  // 12. Render Awards & Leadership
   renderAwardsAndLeadership(data.awards, data.leadership);
-
-  // 12. Setup Contact Modal Popup
-  initContactModal(data.personal);
 
   // 13. Setup Smooth Scroll & Active Nav Highlighting
   initNavScroll();
@@ -91,6 +93,7 @@ function calculateAge(birthDateString) {
 
 /* --- Render Hero --- */
 function renderHero(personal) {
+  if (!personal) return;
   const nameEl = document.getElementById('hero-name');
   const titleEl = document.getElementById('hero-title');
   const taglineEl = document.getElementById('hero-tagline');
@@ -129,7 +132,7 @@ function renderHero(personal) {
 /* --- Render Education --- */
 function renderEducation(educationList, groupsList) {
   const eduContainer = document.getElementById('education-container');
-  if (!eduContainer) return;
+  if (!eduContainer || !educationList) return;
 
   let html = '';
   
@@ -170,7 +173,7 @@ function renderEducation(educationList, groupsList) {
 /* --- Render Research Interests --- */
 function renderResearchInterests(interests) {
   const container = document.getElementById('interests-container');
-  if (!container) return;
+  if (!container || !interests) return;
 
   let html = '<div class="grid-2">';
   interests.forEach(item => {
@@ -195,40 +198,44 @@ function renderResearchInterests(interests) {
 /* --- Render Target Research Environments --- */
 function renderTargetEnvironments(targetData) {
   const container = document.getElementById('phd-targets-container');
-  if (!container) return;
+  if (!container || !targetData) return;
 
   let html = '<div class="grid-3" style="margin-bottom: 2rem;">';
 
-  targetData.countries.forEach(dest => {
-    html += `
-      <div class="card country-phd-card">
-        <div class="target-country-header">
-          <span>${dest.country}</span>
-          <span class="target-status-tag">${dest.status}</span>
+  if (targetData.countries) {
+    targetData.countries.forEach(dest => {
+      html += `
+        <div class="card country-phd-card">
+          <div class="target-country-header">
+            <span>${dest.country}</span>
+            <span class="target-status-tag">${dest.status}</span>
+          </div>
+          <ul class="univ-list">
+            ${dest.universities.map(u => `<li class="univ-item">${u}</li>`).join('')}
+          </ul>
         </div>
-        <ul class="univ-list">
-          ${dest.universities.map(u => `<li class="univ-item">${u}</li>`).join('')}
-        </ul>
-      </div>
-    `;
-  });
+      `;
+    });
+  }
   html += '</div>';
 
   // Target Labs & Alignment
-  html += '<h3 style="font-size: 1.2rem; color: var(--accent-cyan-light); margin-bottom: 1rem;">Targeted Research Laboratories & Faculty Alignment</h3>';
-  html += '<div class="grid-3">';
-  targetData.targetLabs.forEach(lab => {
-    html += `
-      <div class="target-lab-card">
-        <div class="target-lab-title">${lab.lab}</div>
-        <div class="target-lab-inst">${lab.institution} (${lab.country})</div>
-        <div class="lab-detail-row"><span class="lab-detail-label">Research Topic:</span> ${lab.researchTopic}</div>
-        <div class="lab-detail-row"><span class="lab-detail-label">Scientific Alignment:</span> ${lab.alignment}</div>
-        <div class="lab-detail-row" style="margin-top: 0.5rem;"><span class="target-status-tag" style="background: rgba(6, 182, 212, 0.1); color: var(--accent-cyan-light); border-color: var(--accent-cyan-glow);">${lab.status}</span></div>
-      </div>
-    `;
-  });
-  html += '</div>';
+  if (targetData.targetLabs) {
+    html += '<h3 style="font-size: 1.2rem; color: var(--accent-cyan-light); margin-bottom: 1rem;">Targeted Research Laboratories & Faculty Alignment</h3>';
+    html += '<div class="grid-3">';
+    targetData.targetLabs.forEach(lab => {
+      html += `
+        <div class="target-lab-card">
+          <div class="target-lab-title">${lab.lab}</div>
+          <div class="target-lab-inst">${lab.institution} (${lab.country})</div>
+          <div class="lab-detail-row"><span class="lab-detail-label">Research Topic:</span> ${lab.researchTopic}</div>
+          <div class="lab-detail-row"><span class="lab-detail-label">Scientific Alignment:</span> ${lab.alignment}</div>
+          <div class="lab-detail-row" style="margin-top: 0.5rem;"><span class="target-status-tag" style="background: rgba(6, 182, 212, 0.1); color: var(--accent-cyan-light); border-color: var(--accent-cyan-glow);">${lab.status}</span></div>
+        </div>
+      `;
+    });
+    html += '</div>';
+  }
 
   container.innerHTML = html;
 }
@@ -236,7 +243,7 @@ function renderTargetEnvironments(targetData) {
 /* --- Render Research & Technical Expertise (Toolkit Matrix) --- */
 function renderResearchToolkit(toolkit) {
   const container = document.getElementById('research-toolkit-container');
-  if (!container) return;
+  if (!container || !toolkit) return;
 
   const categories = [
     { key: 'robotics', title: 'Robotics' },
@@ -266,7 +273,7 @@ function renderResearchToolkit(toolkit) {
 /* --- Render Scientific Research Projects --- */
 function renderResearchProjects(researchList) {
   const container = document.getElementById('research-projects-container');
-  if (!container) return;
+  if (!container || !researchList) return;
 
   let html = '';
   researchList.forEach(proj => {
@@ -324,7 +331,7 @@ function renderResearchProjects(researchList) {
 /* --- Render Engineering Projects --- */
 function renderEngineeringProjects(engineeringList) {
   const container = document.getElementById('engineering-projects-container');
-  if (!container) return;
+  if (!container || !engineeringList) return;
 
   let html = '<div class="grid-2">';
   engineeringList.forEach(proj => {
@@ -368,35 +375,40 @@ function getEvidencePrefix(type) {
 }
 
 function handleEvidenceClick(label, type) {
-  alert(`Evidence artifact requested: "${label}". Attach your document/code file to the repository folder and it will link directly!`);
+  alert(`Evidence artifact requested: "${label}". Drop your file into the repository folder to link directly!`);
 }
 
 /* --- Render Publications --- */
 function renderPublications(pubData) {
   const container = document.getElementById('publications-container');
-  if (!container) return;
+  if (!container || !pubData) return;
 
   const s = pubData.summary;
-  let html = `
-    <div class="pub-summary-row">
-      <div class="pub-stat-badge"><span class="pub-stat-num">${s.papersInPreparation}</span><span class="pub-stat-label">Papers in Prep</span></div>
-      <div class="pub-stat-badge"><span class="pub-stat-num">${s.presentations}</span><span class="pub-stat-label">Ponencias / Talks</span></div>
-      <div class="pub-stat-badge"><span class="pub-stat-num">${s.congresses}</span><span class="pub-stat-label">Congresos</span></div>
-      <div class="pub-stat-badge"><span class="pub-stat-num">${s.theses}</span><span class="pub-stat-label">Trabajo de Grado</span></div>
-    </div>
-  `;
-
-  pubData.items.forEach(pub => {
+  let html = '';
+  if (s) {
     html += `
-      <div class="card pub-item-card">
-        <span class="pub-type-tag">${pub.type} (${pub.year})</span>
-        <h3 class="pub-title">${pub.title}</h3>
-        <p class="pub-authors"><strong>Authors:</strong> ${pub.authors}</p>
-        <p class="pub-venue">Target Venue: ${pub.venue}</p>
-        <p class="pub-abstract">${pub.abstract}</p>
+      <div class="pub-summary-row">
+        <div class="pub-stat-badge"><span class="pub-stat-num">${s.papersInPreparation}</span><span class="pub-stat-label">Papers in Prep</span></div>
+        <div class="pub-stat-badge"><span class="pub-stat-num">${s.presentations}</span><span class="pub-stat-label">Ponencias / Talks</span></div>
+        <div class="pub-stat-badge"><span class="pub-stat-num">${s.congresses}</span><span class="pub-stat-label">Congresos</span></div>
+        <div class="pub-stat-badge"><span class="pub-stat-num">${s.theses}</span><span class="pub-stat-label">Trabajo de Grado</span></div>
       </div>
     `;
-  });
+  }
+
+  if (pubData.items) {
+    pubData.items.forEach(pub => {
+      html += `
+        <div class="card pub-item-card">
+          <span class="pub-type-tag">${pub.type} (${pub.year})</span>
+          <h3 class="pub-title">${pub.title}</h3>
+          <p class="pub-authors"><strong>Authors:</strong> ${pub.authors}</p>
+          <p class="pub-venue">Target Venue: ${pub.venue}</p>
+          <p class="pub-abstract">${pub.abstract}</p>
+        </div>
+      `;
+    });
+  }
 
   container.innerHTML = html;
 }
@@ -404,7 +416,7 @@ function renderPublications(pubData) {
 /* --- Render Languages --- */
 function renderLanguages(langList) {
   const container = document.getElementById('languages-container');
-  if (!container) return;
+  if (!container || !langList) return;
 
   let html = '<div class="grid-4">';
   langList.forEach(l => {
@@ -424,7 +436,7 @@ function renderLanguages(langList) {
 /* --- Render Skills --- */
 function renderSkills(skillsData) {
   const container = document.getElementById('skills-container');
-  if (!container) return;
+  if (!container || !skillsData) return;
 
   const categories = [
     { title: 'Programming Languages', list: skillsData.programming },
@@ -435,14 +447,16 @@ function renderSkills(skillsData) {
 
   let html = '<div class="grid-2">';
   categories.forEach(cat => {
-    html += `
-      <div class="card">
-        <h4 class="skills-category-title">${cat.title}</h4>
-        <div class="skills-badge-list">
-          ${cat.list.map(s => `<span class="skill-badge">${s}</span>`).join('')}
+    if (cat.list) {
+      html += `
+        <div class="card">
+          <h4 class="skills-category-title">${cat.title}</h4>
+          <div class="skills-badge-list">
+            ${cat.list.map(s => `<span class="skill-badge">${s}</span>`).join('')}
+          </div>
         </div>
-      </div>
-    `;
+      `;
+    }
   });
   html += '</div>';
   container.innerHTML = html;
@@ -453,7 +467,7 @@ function renderAwardsAndLeadership(awardsList, leadershipList) {
   const awardsContainer = document.getElementById('awards-container');
   const leadershipContainer = document.getElementById('leadership-container');
 
-  if (awardsContainer) {
+  if (awardsContainer && awardsList) {
     let html = '<div class="grid-2">';
     awardsList.forEach((a, idx) => {
       html += `
@@ -471,7 +485,7 @@ function renderAwardsAndLeadership(awardsList, leadershipList) {
     awardsContainer.innerHTML = html;
   }
 
-  if (leadershipContainer) {
+  if (leadershipContainer && leadershipList) {
     let html = '<div class="grid-3">';
     leadershipList.forEach(l => {
       html += `
@@ -494,7 +508,10 @@ function initContactModal(personal) {
   const closeBtn = document.getElementById('modal-close-btn');
   const copyEmailBtn = document.getElementById('copy-email-btn');
 
-  if (!modalBackdrop) return;
+  if (!modalBackdrop) {
+    console.error("contact-modal backdrop element not found.");
+    return;
+  }
 
   openBtns.forEach(btn => {
     btn.addEventListener('click', (e) => {
@@ -515,7 +532,7 @@ function initContactModal(personal) {
     }
   });
 
-  if (copyEmailBtn) {
+  if (copyEmailBtn && personal) {
     copyEmailBtn.addEventListener('click', () => {
       navigator.clipboard.writeText(personal.email).then(() => {
         const origText = copyEmailBtn.textContent;
