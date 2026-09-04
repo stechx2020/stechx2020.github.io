@@ -1,6 +1,6 @@
 /**
  * Application Logic — Sebastián Castañeda PhD Portfolio
- * Multi-Language (i18n) Engine (es / en)
+ * 5-Language (i18n) Engine (es, en, de, ja, ko)
  */
 
 let currentLang = localStorage.getItem('lang') || 'es';
@@ -22,7 +22,6 @@ window.closeContactModal = function(e) {
   if (e && e.preventDefault) e.preventDefault();
   const modalBackdrop = document.getElementById('contact-modal');
   if (modalBackdrop) {
-    modalBackdrop.classList.remove('remove');
     modalBackdrop.classList.remove('open');
     modalBackdrop.style.opacity = '0';
     setTimeout(() => {
@@ -31,25 +30,44 @@ window.closeContactModal = function(e) {
   }
 };
 
-// Global Language Switcher
+// Global Language Switcher Logic
 window.switchLanguage = function(langCode) {
   if (!window.cvData.i18n[langCode]) return;
   currentLang = langCode;
   localStorage.setItem('lang', langCode);
   renderAllApp();
   const menu = document.getElementById('lang-dropdown-menu');
-  if (menu) menu.classList.remove('show');
+  if (menu) {
+    menu.classList.remove('show');
+    menu.style.display = 'none';
+  }
 };
 
 window.toggleLangMenu = function(e) {
-  if (e && e.stopPropagation) e.stopPropagation();
+  if (e) {
+    e.preventDefault();
+    if (e.stopPropagation) e.stopPropagation();
+  }
   const menu = document.getElementById('lang-dropdown-menu');
-  if (menu) menu.classList.toggle('show');
+  if (menu) {
+    const isShown = menu.classList.contains('show') || menu.style.display === 'flex' || menu.style.display === 'block';
+    if (isShown) {
+      menu.classList.remove('show');
+      menu.style.display = 'none';
+    } else {
+      menu.classList.add('show');
+      menu.style.display = 'flex';
+    }
+  }
 };
 
-document.addEventListener('click', () => {
+document.addEventListener('click', (e) => {
+  const wrapper = document.querySelector('.lang-selector-wrapper');
   const menu = document.getElementById('lang-dropdown-menu');
-  if (menu) menu.classList.remove('show');
+  if (wrapper && !wrapper.contains(e.target) && menu) {
+    menu.classList.remove('show');
+    menu.style.display = 'none';
+  }
 });
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -60,7 +78,7 @@ function renderAllApp() {
   const data = window.cvData;
   if (!data) return;
 
-  // 1. Render Language Switcher Control
+  // 1. Render High-End Language Switcher
   renderLangSelector(data.languagesList);
 
   // 2. Setup Contact Modal Popup
@@ -70,10 +88,11 @@ function renderAllApp() {
   initTheme();
 
   // 4. Render UI Navigation & Static Labels
-  renderUILabels(data.i18n[currentLang]);
+  const i18nObj = data.i18n[currentLang] || data.i18n['en'] || data.i18n['es'];
+  renderUILabels(i18nObj);
 
   // 5. Render Hero & Profile Card
-  renderHero(data.personal, data.i18n[currentLang].hero);
+  renderHero(data.personal, i18nObj.hero);
 
   // 6. Render Education & Research Groups
   renderEducation(data.education, data.researchGroups);
@@ -109,7 +128,7 @@ function renderAllApp() {
   initNavScroll();
 }
 
-/* --- Helper for Bilingual Strings --- */
+/* --- Helper for Multilingual Text Extraction --- */
 function getText(field) {
   if (!field) return '';
   if (typeof field === 'string') return field;
@@ -123,14 +142,19 @@ function renderLangSelector(languagesList) {
   if (!btn || !menu || !languagesList) return;
 
   const currentObj = languagesList.find(l => l.code === currentLang) || languagesList[0];
-  btn.innerHTML = `<span>${currentObj.flag}</span> <span>${currentObj.name}</span> ▾`;
+  btn.innerHTML = `
+    <span>${currentObj.flag}</span>
+    <span>${currentObj.name}</span>
+    <span style="font-size: 0.7rem; color: var(--text-muted);">▾</span>
+  `;
 
   let menuHtml = '';
   languagesList.forEach(l => {
     menuHtml += `
       <li>
-        <button class="lang-option-btn ${l.code === currentLang ? 'active' : ''}" onclick="switchLanguage('${l.code}')">
-          <span>${l.flag}</span> <span>${l.name}</span>
+        <button class="lang-item-btn ${l.code === currentLang ? 'active' : ''}" onclick="switchLanguage('${l.code}')">
+          <span>${l.flag}</span>
+          <span>${l.name}</span>
         </button>
       </li>
     `;
@@ -284,7 +308,14 @@ function renderHero(personal, heroI18n) {
 
   if (ageBadge && personal.birthDate) {
     const age = calculateAge(personal.birthDate);
-    ageBadge.textContent = currentLang === 'es' ? `${age} años (1 de Abril de 2003)` : `${age} years old (April 1, 2003)`;
+    const ageLabels = {
+      es: `${age} años (1 de Abril de 2003)`,
+      en: `${age} years old (April 1, 2003)`,
+      de: `${age} Jahre alt (1. April 2003)`,
+      ja: `23歳（2003年4月1日生）`,
+      ko: `23세 (2003년 4월 1일생)`
+    };
+    ageBadge.textContent = ageLabels[currentLang] || ageLabels['en'];
   }
 }
 
@@ -337,7 +368,7 @@ function renderResearchInterests(interests) {
   let html = '<div class="grid-2">';
   interests.forEach(item => {
     const catName = getText(item.category);
-    const isPrimary = catName.toLowerCase().includes('primary') || catName.toLowerCase().includes('principal');
+    const isPrimary = catName.toLowerCase().includes('primary') || catName.toLowerCase().includes('principal') || catName.toLowerCase().includes('主要');
     html += `
       <div class="card">
         <h3 style="font-size: 1.15rem; margin-bottom: 0.75rem; color: ${isPrimary ? 'var(--accent-cyan-light)' : 'var(--accent-indigo-light)'};">
@@ -380,8 +411,14 @@ function renderTargetEnvironments(targetData) {
   html += '</div>';
 
   if (targetData.targetLabs) {
-    const title = currentLang === 'es' ? 'Laboratorios de Investigación y Alineación Académica' : 'Targeted Research Laboratories & Faculty Alignment';
-    html += `<h3 style="font-size: 1.2rem; color: var(--accent-cyan-light); margin-bottom: 1rem;">${title}</h3>`;
+    const titleMap = {
+      es: 'Laboratorios de Investigación y Alineación Académica',
+      en: 'Targeted Research Laboratories & Faculty Alignment',
+      de: 'Ziel-Forschungslabore & Wissenschaftliche Ausrichtung',
+      ja: '目標研究室および学術的適合性',
+      ko: '목표 연구실 및 학술적 적합성'
+    };
+    html += `<h3 style="font-size: 1.2rem; color: var(--accent-cyan-light); margin-bottom: 1rem;">${titleMap[currentLang] || titleMap['en']}</h3>`;
     html += '<div class="grid-3">';
     targetData.targetLabs.forEach(lab => {
       html += `
@@ -435,7 +472,8 @@ function renderResearchProjects(researchList) {
   const container = document.getElementById('research-projects-container');
   if (!container || !researchList) return;
 
-  const labels = window.cvData.i18n[currentLang].breakdown;
+  const i18nObj = window.cvData.i18n[currentLang] || window.cvData.i18n['en'];
+  const labels = i18nObj.breakdown;
 
   let html = '';
   researchList.forEach(proj => {
@@ -495,7 +533,8 @@ function renderEngineeringProjects(engineeringList) {
   const container = document.getElementById('engineering-projects-container');
   if (!container || !engineeringList) return;
 
-  const labels = window.cvData.i18n[currentLang].breakdown;
+  const i18nObj = window.cvData.i18n[currentLang] || window.cvData.i18n['en'];
+  const labels = i18nObj.breakdown;
 
   let html = '<div class="grid-2">';
   engineeringList.forEach(proj => {
@@ -675,18 +714,18 @@ function initContactModal(personal) {
   if (!modalBackdrop) return;
 
   openBtns.forEach(btn => {
-    btn.addEventListener('click', window.openContactModal);
+    btn.onclick = window.openContactModal;
   });
 
   if (closeBtn) {
-    closeBtn.addEventListener('click', window.closeContactModal);
+    closeBtn.onclick = window.closeContactModal;
   }
 
-  modalBackdrop.addEventListener('click', (e) => {
+  modalBackdrop.onclick = (e) => {
     if (e.target === modalBackdrop) {
       window.closeContactModal(e);
     }
-  });
+  };
 
   if (copyEmailBtn && personal) {
     copyEmailBtn.onclick = () => {
