@@ -1,7 +1,9 @@
 /**
  * Application Logic — Sebastián Castañeda PhD Portfolio
- * Renders data dynamically from window.cvData
+ * Multi-Language (i18n) Engine (es / en)
  */
+
+let currentLang = localStorage.getItem('lang') || 'es';
 
 // Global Fail-Safe Contact Modal Functions
 window.openContactModal = function(e) {
@@ -20,6 +22,7 @@ window.closeContactModal = function(e) {
   if (e && e.preventDefault) e.preventDefault();
   const modalBackdrop = document.getElementById('contact-modal');
   if (modalBackdrop) {
+    modalBackdrop.classList.remove('remove');
     modalBackdrop.classList.remove('open');
     modalBackdrop.style.opacity = '0';
     setTimeout(() => {
@@ -28,55 +31,189 @@ window.closeContactModal = function(e) {
   }
 };
 
-document.addEventListener('DOMContentLoaded', () => {
-  const data = window.cvData;
-  if (!data) {
-    console.error("cvData not loaded properly.");
-    return;
-  }
+// Global Language Switcher
+window.switchLanguage = function(langCode) {
+  if (!window.cvData.i18n[langCode]) return;
+  currentLang = langCode;
+  localStorage.setItem('lang', langCode);
+  renderAllApp();
+  const menu = document.getElementById('lang-dropdown-menu');
+  if (menu) menu.classList.remove('show');
+};
 
-  // 1. Setup Contact Modal Popup
+window.toggleLangMenu = function(e) {
+  if (e && e.stopPropagation) e.stopPropagation();
+  const menu = document.getElementById('lang-dropdown-menu');
+  if (menu) menu.classList.toggle('show');
+};
+
+document.addEventListener('click', () => {
+  const menu = document.getElementById('lang-dropdown-menu');
+  if (menu) menu.classList.remove('show');
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+  renderAllApp();
+});
+
+function renderAllApp() {
+  const data = window.cvData;
+  if (!data) return;
+
+  // 1. Render Language Switcher Control
+  renderLangSelector(data.languagesList);
+
+  // 2. Setup Contact Modal Popup
   initContactModal(data.personal);
 
-  // 2. Theme Management (Dark / Light)
+  // 3. Theme Management
   initTheme();
 
-  // 3. Render Hero & Profile Card (Photo, Age, Links)
-  renderHero(data.personal);
+  // 4. Render UI Navigation & Static Labels
+  renderUILabels(data.i18n[currentLang]);
 
-  // 4. Render Education & Research Groups
+  // 5. Render Hero & Profile Card
+  renderHero(data.personal, data.i18n[currentLang].hero);
+
+  // 6. Render Education & Research Groups
   renderEducation(data.education, data.researchGroups);
 
-  // 5. Render Research Interests
+  // 7. Render Research Interests
   renderResearchInterests(data.researchInterests);
 
-  // 6. Render Target Research Environments (PhD Strategy)
+  // 8. Render Target Research Environments
   renderTargetEnvironments(data.targetEnvironments);
 
-  // 7. Render Research & Technical Expertise (Toolkit Matrix)
+  // 9. Render Research & Technical Expertise
   renderResearchToolkit(data.researchToolkit);
 
-  // 8. Render Scientific Research Projects & Applied Engineering Projects
+  // 10. Render Scientific Research & Applied Engineering Projects
   renderResearchProjects(data.researchProjects);
   renderEngineeringProjects(data.engineeringProjects);
 
-  // 9. Render Publications
+  // 11. Render Publications
   renderPublications(data.publications);
 
-  // 10. Render Languages
+  // 12. Render Languages
   renderLanguages(data.languages);
 
-  // 11. Render Skills (Defensive check)
+  // 13. Render Skills (Defensive)
   if (data.skills) {
     renderSkills(data.skills);
   }
 
-  // 12. Render Awards & Leadership
+  // 14. Render Awards & Leadership
   renderAwardsAndLeadership(data.awards, data.leadership);
 
-  // 13. Setup Smooth Scroll & Active Nav Highlighting
+  // 15. Setup Smooth Scroll
   initNavScroll();
-});
+}
+
+/* --- Helper for Bilingual Strings --- */
+function getText(field) {
+  if (!field) return '';
+  if (typeof field === 'string') return field;
+  return field[currentLang] || field['en'] || field['es'] || '';
+}
+
+/* --- Language Selector --- */
+function renderLangSelector(languagesList) {
+  const btn = document.getElementById('current-lang-btn');
+  const menu = document.getElementById('lang-dropdown-menu');
+  if (!btn || !menu || !languagesList) return;
+
+  const currentObj = languagesList.find(l => l.code === currentLang) || languagesList[0];
+  btn.innerHTML = `<span>${currentObj.flag}</span> <span>${currentObj.name}</span> ▾`;
+
+  let menuHtml = '';
+  languagesList.forEach(l => {
+    menuHtml += `
+      <li>
+        <button class="lang-option-btn ${l.code === currentLang ? 'active' : ''}" onclick="switchLanguage('${l.code}')">
+          <span>${l.flag}</span> <span>${l.name}</span>
+        </button>
+      </li>
+    `;
+  });
+  menu.innerHTML = menuHtml;
+}
+
+/* --- Render UI Static Labels --- */
+function renderUILabels(i18nObj) {
+  if (!i18nObj) return;
+
+  // Nav links
+  const navMap = {
+    'nav-about': i18nObj.nav.about,
+    'nav-edu': i18nObj.nav.education,
+    'nav-research': i18nObj.nav.researchProjects,
+    'nav-eng': i18nObj.nav.engineeringProjects,
+    'nav-expertise': i18nObj.nav.expertise,
+    'nav-pub': i18nObj.nav.publications,
+    'nav-lang': i18nObj.nav.languages,
+    'nav-phd': i18nObj.nav.targetLabs,
+    'nav-contact-btn': i18nObj.nav.contactBtn,
+    'nav-pdf-btn': i18nObj.nav.pdfBtn
+  };
+
+  Object.keys(navMap).forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = navMap[id];
+  });
+
+  // Section Headers
+  const sectionMap = {
+    'about-tag': i18nObj.sections.aboutTag,
+    'about-title': i18nObj.sections.aboutTitle,
+    'edu-tag': i18nObj.sections.eduTag,
+    'edu-title': i18nObj.sections.eduTitle,
+    'interests-tag': i18nObj.sections.interestsTag,
+    'interests-title': i18nObj.sections.interestsTitle,
+    'research-tag': i18nObj.sections.researchTag,
+    'research-title': i18nObj.sections.researchTitle,
+    'eng-tag': i18nObj.sections.engTag,
+    'eng-title': i18nObj.sections.engTitle,
+    'expertise-tag': i18nObj.sections.expertiseTag,
+    'expertise-title': i18nObj.sections.expertiseTitle,
+    'phd-tag': i18nObj.sections.phdTag,
+    'phd-title': i18nObj.sections.phdTitle,
+    'pub-tag': i18nObj.sections.pubTag,
+    'pub-title': i18nObj.sections.pubTitle,
+    'lang-tag': i18nObj.sections.langTag,
+    'lang-title': i18nObj.sections.langTitle,
+    'skills-tag': i18nObj.sections.skillsTag,
+    'skills-title': i18nObj.sections.skillsTitle,
+    'awards-tag': i18nObj.sections.awardsTag,
+    'awards-title': i18nObj.sections.awardsTitle
+  };
+
+  Object.keys(sectionMap).forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = sectionMap[id];
+  });
+
+  // Modal Strings
+  const m = i18nObj.modal;
+  if (m) {
+    const mTitle = document.getElementById('modal-title');
+    const mSub = document.getElementById('modal-subtitle');
+    const mEmailLbl = document.getElementById('modal-email-lbl');
+    const mCopyBtn = document.getElementById('copy-email-btn');
+    const mPhoneLbl = document.getElementById('modal-phone-lbl');
+    const mLocLbl = document.getElementById('modal-loc-lbl');
+    const mLocVal = document.getElementById('modal-loc-val');
+    const mNotice = document.getElementById('modal-notice');
+
+    if (mTitle) mTitle.textContent = m.title;
+    if (mSub) mSub.textContent = m.subtitle;
+    if (mEmailLbl) mEmailLbl.textContent = m.emailLabel;
+    if (mCopyBtn) mCopyBtn.textContent = m.copyBtn;
+    if (mPhoneLbl) mPhoneLbl.textContent = m.phoneLabel;
+    if (mLocLbl) mLocLbl.textContent = m.locationLabel;
+    if (mLocVal) mLocVal.textContent = m.locationVal;
+    if (mNotice) mNotice.textContent = m.notice;
+  }
+}
 
 /* --- Theme Toggle --- */
 function initTheme() {
@@ -87,13 +224,13 @@ function initTheme() {
   updateThemeIcon(savedTheme);
 
   if (toggleBtn) {
-    toggleBtn.addEventListener('click', () => {
+    toggleBtn.onclick = () => {
       const currentTheme = document.documentElement.getAttribute('data-theme');
       const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
       document.documentElement.setAttribute('data-theme', newTheme);
       localStorage.setItem('theme', newTheme);
       updateThemeIcon(newTheme);
-    });
+    };
   }
 }
 
@@ -104,7 +241,6 @@ function updateThemeIcon(theme) {
   }
 }
 
-/* --- Calculate Age dynamically --- */
 function calculateAge(birthDateString) {
   const today = new Date();
   const birthDate = new Date(birthDateString);
@@ -117,7 +253,7 @@ function calculateAge(birthDateString) {
 }
 
 /* --- Render Hero --- */
-function renderHero(personal) {
+function renderHero(personal, heroI18n) {
   if (!personal) return;
   const nameEl = document.getElementById('hero-name');
   const titleEl = document.getElementById('hero-title');
@@ -126,19 +262,18 @@ function renderHero(personal) {
   const bioEl = document.getElementById('about-bio');
   const avatarWrapper = document.getElementById('profile-avatar-wrapper');
   const ageBadge = document.getElementById('profile-age-badge');
-  const linkedinBtn = document.getElementById('hero-linkedin-link');
+  const heroContactBtn = document.getElementById('hero-contact-btn');
+  const heroTargetBtn = document.getElementById('hero-target-btn');
 
   if (nameEl) nameEl.textContent = personal.name;
-  if (titleEl) titleEl.textContent = personal.subtitle || personal.title;
-  if (taglineEl) taglineEl.textContent = personal.tagline;
-  if (badgeEl) badgeEl.textContent = personal.statusBadge;
-  if (bioEl) bioEl.textContent = personal.bio;
+  if (titleEl) titleEl.textContent = heroI18n ? heroI18n.subtitle : personal.subtitle;
+  if (taglineEl) taglineEl.textContent = heroI18n ? heroI18n.tagline : personal.tagline;
+  if (badgeEl) badgeEl.textContent = heroI18n ? heroI18n.statusBadge : personal.statusBadge;
+  if (bioEl) bioEl.textContent = getText(personal.bio);
 
-  if (linkedinBtn && personal.linkedin) {
-    linkedinBtn.href = personal.linkedin;
-  }
+  if (heroContactBtn && heroI18n) heroContactBtn.textContent = heroI18n.contactAction;
+  if (heroTargetBtn && heroI18n) heroTargetBtn.textContent = heroI18n.targetAction;
 
-  // Profile Image Render
   if (avatarWrapper) {
     if (personal.profileImg) {
       avatarWrapper.innerHTML = `<img src="${personal.profileImg}" alt="${personal.name}" class="avatar-img">`;
@@ -147,10 +282,9 @@ function renderHero(personal) {
     }
   }
 
-  // Calculate & Display Age
   if (ageBadge && personal.birthDate) {
     const age = calculateAge(personal.birthDate);
-    ageBadge.textContent = `${age} años (1 de Abril de 2003)`;
+    ageBadge.textContent = currentLang === 'es' ? `${age} años (1 de Abril de 2003)` : `${age} years old (April 1, 2003)`;
   }
 }
 
@@ -165,12 +299,12 @@ function renderEducation(educationList, groupsList) {
     html += `
       <div class="card" style="margin-bottom: 1.25rem;">
         <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.5rem;">
-          <h3 style="font-size: 1.25rem; color: var(--text-primary);">${edu.degree}</h3>
+          <h3 style="font-size: 1.25rem; color: var(--text-primary);">${getText(edu.degree)}</h3>
           <span style="font-size: 0.82rem; padding: 0.25rem 0.75rem; background: var(--accent-cyan-glow); color: var(--accent-cyan-light); border-radius: var(--radius-full); font-weight: 600;">${edu.period}</span>
         </div>
         <p style="font-weight: 600; color: var(--accent-indigo-light); margin-bottom: 0.5rem;">${edu.institution} (${edu.location})</p>
         <ul style="list-style: disc; margin-left: 1.25rem; color: var(--text-secondary); font-size: 0.92rem;">
-          ${edu.details.map(d => `<li>${d}</li>`).join('')}
+          ${(edu.details[currentLang] || edu.details['en'] || edu.details['es']).map(d => `<li>${d}</li>`).join('')}
         </ul>
       </div>
     `;
@@ -180,7 +314,7 @@ function renderEducation(educationList, groupsList) {
     groupsList.forEach(grp => {
       html += `
         <div class="card" style="border-left: 3px solid var(--accent-indigo);">
-          <h4 style="font-size: 1.1rem; color: var(--accent-cyan-light); margin-bottom: 0.4rem;">${grp.name} — ${grp.role}</h4>
+          <h4 style="font-size: 1.1rem; color: var(--accent-cyan-light); margin-bottom: 0.4rem;">${grp.name} — ${getText(grp.role)}</h4>
           <p style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 0.5rem;">
             <strong>Supervisors:</strong> ${grp.supervisors.join(', ')}
           </p>
@@ -202,11 +336,12 @@ function renderResearchInterests(interests) {
 
   let html = '<div class="grid-2">';
   interests.forEach(item => {
-    const isPrimary = item.category.includes('Primary');
+    const catName = getText(item.category);
+    const isPrimary = catName.toLowerCase().includes('primary') || catName.toLowerCase().includes('principal');
     html += `
       <div class="card">
         <h3 style="font-size: 1.15rem; margin-bottom: 0.75rem; color: ${isPrimary ? 'var(--accent-cyan-light)' : 'var(--accent-indigo-light)'};">
-          ${item.category}
+          ${catName}
         </h3>
         <div class="interest-tag-cloud">
           ${item.topics.map(topic => `
@@ -233,7 +368,7 @@ function renderTargetEnvironments(targetData) {
         <div class="card country-phd-card">
           <div class="target-country-header">
             <span>${dest.country}</span>
-            <span class="target-status-tag">${dest.status}</span>
+            <span class="target-status-tag">${getText(dest.status)}</span>
           </div>
           <ul class="univ-list">
             ${dest.universities.map(u => `<li class="univ-item">${u}</li>`).join('')}
@@ -245,7 +380,8 @@ function renderTargetEnvironments(targetData) {
   html += '</div>';
 
   if (targetData.targetLabs) {
-    html += '<h3 style="font-size: 1.2rem; color: var(--accent-cyan-light); margin-bottom: 1rem;">Targeted Research Laboratories & Faculty Alignment</h3>';
+    const title = currentLang === 'es' ? 'Laboratorios de Investigación y Alineación Académica' : 'Targeted Research Laboratories & Faculty Alignment';
+    html += `<h3 style="font-size: 1.2rem; color: var(--accent-cyan-light); margin-bottom: 1rem;">${title}</h3>`;
     html += '<div class="grid-3">';
     targetData.targetLabs.forEach(lab => {
       html += `
@@ -253,8 +389,8 @@ function renderTargetEnvironments(targetData) {
           <div class="target-lab-title">${lab.lab}</div>
           <div class="target-lab-inst">${lab.institution} (${lab.country})</div>
           <div class="lab-detail-row"><span class="lab-detail-label">Research Topic:</span> ${lab.researchTopic}</div>
-          <div class="lab-detail-row"><span class="lab-detail-label">Scientific Alignment:</span> ${lab.alignment}</div>
-          <div class="lab-detail-row" style="margin-top: 0.5rem;"><span class="target-status-tag" style="background: rgba(6, 182, 212, 0.1); color: var(--accent-cyan-light); border-color: var(--accent-cyan-glow);">${lab.status}</span></div>
+          <div class="lab-detail-row"><span class="lab-detail-label">Scientific Alignment:</span> ${getText(lab.alignment)}</div>
+          <div class="lab-detail-row" style="margin-top: 0.5rem;"><span class="target-status-tag" style="background: rgba(6, 182, 212, 0.1); color: var(--accent-cyan-light); border-color: var(--accent-cyan-glow);">${getText(lab.status)}</span></div>
         </div>
       `;
     });
@@ -264,7 +400,7 @@ function renderTargetEnvironments(targetData) {
   container.innerHTML = html;
 }
 
-/* --- Render Research & Technical Expertise (Toolkit Matrix) --- */
+/* --- Render Research & Technical Expertise --- */
 function renderResearchToolkit(toolkit) {
   const container = document.getElementById('research-toolkit-container');
   if (!container || !toolkit) return;
@@ -299,6 +435,8 @@ function renderResearchProjects(researchList) {
   const container = document.getElementById('research-projects-container');
   if (!container || !researchList) return;
 
+  const labels = window.cvData.i18n[currentLang].breakdown;
+
   let html = '';
   researchList.forEach(proj => {
     html += `
@@ -307,39 +445,39 @@ function renderResearchProjects(researchList) {
           <div>
             <span class="type-pill">${proj.type}</span>
             <h3 class="research-title" style="margin-top: 0.4rem;">${proj.title}</h3>
-            <p class="research-subtitle">${proj.subtitle}</p>
+            <p class="research-subtitle">${getText(proj.subtitle)}</p>
           </div>
         </div>
 
         <div class="research-breakdown-grid">
           <div class="breakdown-item">
-            <span class="breakdown-label">Problem</span>
-            <span class="breakdown-val">${proj.problem}</span>
+            <span class="breakdown-label">${labels.problem}</span>
+            <span class="breakdown-val">${getText(proj.problem)}</span>
           </div>
           <div class="breakdown-item">
-            <span class="breakdown-label">Methodology</span>
-            <span class="breakdown-val">${proj.methodology}</span>
+            <span class="breakdown-label">${labels.methodology}</span>
+            <span class="breakdown-val">${getText(proj.methodology)}</span>
           </div>
           <div class="breakdown-item">
-            <span class="breakdown-label">Mathematical Model</span>
-            <span class="breakdown-val">${proj.model}</span>
+            <span class="breakdown-label">${labels.model}</span>
+            <span class="breakdown-val">${getText(proj.model)}</span>
           </div>
           <div class="breakdown-item">
-            <span class="breakdown-label">Simulation Environment</span>
-            <span class="breakdown-val">${proj.simulation}</span>
+            <span class="breakdown-label">${labels.simulation}</span>
+            <span class="breakdown-val">${getText(proj.simulation)}</span>
           </div>
           <div class="breakdown-item">
-            <span class="breakdown-label">Quantitative Results</span>
-            <span class="breakdown-val">${proj.results}</span>
+            <span class="breakdown-label">${labels.results}</span>
+            <span class="breakdown-val">${getText(proj.results)}</span>
           </div>
           <div class="breakdown-item">
-            <span class="breakdown-label">Conclusions</span>
-            <span class="breakdown-val">${proj.conclusions}</span>
+            <span class="breakdown-label">${labels.conclusions}</span>
+            <span class="breakdown-val">${getText(proj.conclusions)}</span>
           </div>
         </div>
 
         <div class="evidence-container">
-          <span class="evidence-label">Verifiable Evidence:</span>
+          <span class="evidence-label">${labels.evidenceLabel}</span>
           ${proj.evidence.map(ev => `
             <button class="btn-evidence" onclick="handleEvidenceClick('${ev.label}', '${ev.type}')">
               [${getEvidencePrefix(ev.type)} ${ev.label}]
@@ -357,6 +495,8 @@ function renderEngineeringProjects(engineeringList) {
   const container = document.getElementById('engineering-projects-container');
   if (!container || !engineeringList) return;
 
+  const labels = window.cvData.i18n[currentLang].breakdown;
+
   let html = '<div class="grid-2">';
   engineeringList.forEach(proj => {
     html += `
@@ -364,15 +504,15 @@ function renderEngineeringProjects(engineeringList) {
         <div style="margin-bottom: 0.75rem;">
           <span class="type-pill engineering">${proj.type}</span>
           <h3 class="research-title" style="margin-top: 0.4rem;">${proj.title}</h3>
-          <div style="font-size: 0.85rem; color: var(--accent-indigo-light); font-weight: 600;">${proj.role}</div>
+          <div style="font-size: 0.85rem; color: var(--accent-indigo-light); font-weight: 600;">${getText(proj.role)}</div>
         </div>
-        <p style="font-size: 0.92rem; color: var(--text-secondary); margin-bottom: 0.75rem;">${proj.description}</p>
+        <p style="font-size: 0.92rem; color: var(--text-secondary); margin-bottom: 0.75rem;">${getText(proj.description)}</p>
         <ul class="project-highlights" style="margin-bottom: 1rem;">
-          ${proj.highlights.map(h => `<li>${h}</li>`).join('')}
+          ${(proj.highlights[currentLang] || proj.highlights['en'] || proj.highlights['es']).map(h => `<li>${h}</li>`).join('')}
         </ul>
 
         <div class="evidence-container">
-          <span class="evidence-label">Engineering Artifacts:</span>
+          <span class="evidence-label">${labels.engEvidenceLabel}</span>
           ${proj.evidence.map(ev => `
             <button class="btn-evidence" onclick="handleEvidenceClick('${ev.label}', '${ev.type}')">
               [${getEvidencePrefix(ev.type)} ${ev.label}]
@@ -428,7 +568,7 @@ function renderPublications(pubData) {
           <h3 class="pub-title">${pub.title}</h3>
           <p class="pub-authors"><strong>Authors:</strong> ${pub.authors}</p>
           <p class="pub-venue">Target Venue: ${pub.venue}</p>
-          <p class="pub-abstract">${pub.abstract}</p>
+          <p class="pub-abstract">${getText(pub.abstract)}</p>
         </div>
       `;
     });
@@ -447,8 +587,8 @@ function renderLanguages(langList) {
     html += `
       <div class="card lang-card">
         <div>
-          <div class="lang-name">${l.name}</div>
-          <div class="lang-level">${l.level}</div>
+          <div class="lang-name">${getText(l.name)}</div>
+          <div class="lang-level">${getText(l.level)}</div>
         </div>
       </div>
     `;
@@ -500,7 +640,7 @@ function renderAwardsAndLeadership(awardsList, leadershipList) {
           <div>
             <h3 style="font-size: 1.15rem; margin-bottom: 0.25rem;">${a.title} (${a.year})</h3>
             <p style="font-size: 0.88rem; color: var(--accent-cyan-light); font-weight: 600; margin-bottom: 0.4rem;">${a.organization}</p>
-            <p style="font-size: 0.88rem; color: var(--text-secondary);">${a.description}</p>
+            <p style="font-size: 0.88rem; color: var(--text-secondary);">${getText(a.description)}</p>
           </div>
         </div>
       `;
@@ -514,9 +654,9 @@ function renderAwardsAndLeadership(awardsList, leadershipList) {
     leadershipList.forEach(l => {
       html += `
         <div class="card">
-          <h3 style="font-size: 1.1rem; color: var(--accent-indigo-light); margin-bottom: 0.3rem;">${l.role}</h3>
+          <h3 style="font-size: 1.1rem; color: var(--accent-indigo-light); margin-bottom: 0.3rem;">${getText(l.role)}</h3>
           <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.5rem;">${l.organization}</p>
-          <p style="font-size: 0.88rem; color: var(--text-secondary);">${l.details}</p>
+          <p style="font-size: 0.88rem; color: var(--text-secondary);">${getText(l.details)}</p>
         </div>
       `;
     });
@@ -549,10 +689,10 @@ function initContactModal(personal) {
   });
 
   if (copyEmailBtn && personal) {
-    copyEmailBtn.addEventListener('click', () => {
+    copyEmailBtn.onclick = () => {
       navigator.clipboard.writeText(personal.email).then(() => {
         const origText = copyEmailBtn.textContent;
-        copyEmailBtn.textContent = "Copied!";
+        copyEmailBtn.textContent = currentLang === 'es' ? "¡Copiado!" : "Copied!";
         copyEmailBtn.style.background = "var(--accent-emerald)";
         copyEmailBtn.style.color = "#ffffff";
         setTimeout(() => {
@@ -561,7 +701,7 @@ function initContactModal(personal) {
           copyEmailBtn.style.color = "";
         }, 2000);
       });
-    });
+    };
   }
 }
 

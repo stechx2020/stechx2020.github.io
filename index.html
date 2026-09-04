@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="es" data-theme="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -28,24 +28,34 @@
       </a>
 
       <ul class="nav-links">
-        <li><a href="#about" class="nav-link active">About</a></li>
-        <li><a href="#education" class="nav-link">Education</a></li>
-        <li><a href="#research-projects" class="nav-link">Research</a></li>
-        <li><a href="#engineering-projects" class="nav-link">Engineering</a></li>
-        <li><a href="#expertise" class="nav-link">Expertise</a></li>
-        <li><a href="#publications" class="nav-link">Publications</a></li>
-        <li><a href="#phd" class="nav-link">Target Labs</a></li>
+        <li><a href="#about" id="nav-about" class="nav-link active">Perfil</a></li>
+        <li><a href="#education" id="nav-edu" class="nav-link">Educación</a></li>
+        <li><a href="#research-projects" id="nav-research" class="nav-link">Investigación</a></li>
+        <li><a href="#engineering-projects" id="nav-eng" class="nav-link">Ingeniería</a></li>
+        <li><a href="#expertise" id="nav-expertise" class="nav-link">Especialidad</a></li>
+        <li><a href="#publications" id="nav-pub" class="nav-link">Publicaciones</a></li>
+        <li><a href="#phd" id="nav-phd" class="nav-link">Metas Ph.D.</a></li>
       </ul>
 
       <div class="nav-actions">
+        <!-- Multi-Language Selector Dropdown -->
+        <div class="lang-selector-wrapper">
+          <button id="current-lang-btn" class="lang-selector-btn" onclick="toggleLangMenu(event)">
+            <span>🇪🇸</span> <span>Español</span> ▾
+          </button>
+          <ul id="lang-dropdown-menu" class="lang-dropdown-menu">
+            <!-- Rendered by app.js -->
+          </ul>
+        </div>
+
         <button id="theme-toggle" class="theme-toggle-btn" title="Toggle Light/Dark Theme">
           <span id="theme-icon">Theme</span>
         </button>
-        <button onclick="openContactModal(event)" class="btn btn-primary open-contact-modal" style="padding: 0.4rem 0.9rem; font-size: 0.85rem;">
-          Contact
+        <button onclick="openContactModal(event)" id="nav-contact-btn" class="btn btn-primary open-contact-modal" style="padding: 0.4rem 0.9rem; font-size: 0.85rem;">
+          Contacto
         </button>
-        <button onclick="window.print()" class="btn btn-secondary" style="padding: 0.4rem 0.8rem; font-size: 0.85rem;" title="Export CV to PDF">
-          Export PDF
+        <button onclick="window.print()" id="nav-pdf-btn" class="btn btn-secondary" style="padding: 0.4rem 0.8rem; font-size: 0.85rem;" title="Export CV to PDF">
+          Exportar PDF
         </button>
       </div>
     </div>
@@ -56,23 +66,23 @@
     <div class="container">
       <div class="hero-badge">
         <span class="pulse-dot"></span>
-        <span id="hero-badge-text">Graduating 2027 — Seeking PhD Positions</span>
+        <span id="hero-badge-text">Graduación 2027 — Buscando Posiciones de Ph.D.</span>
       </div>
 
       <div class="hero-grid">
         <div class="hero-content">
           <h1 id="hero-name" class="hero-title">Sebastián Castañeda</h1>
-          <h2 id="hero-title" class="hero-subtitle">Mechatronics Engineering Student | Aspiring PhD Researcher</h2>
+          <h2 id="hero-title" class="hero-subtitle">Estudiante de Ingeniería Mecatrónica | Aspirante a Investigador Ph.D.</h2>
           <p id="hero-tagline" class="hero-tagline">
-            Mechatronics Engineering student at Universidad Militar Nueva Granada, working on robotic manipulation, control systems, computer vision, embedded systems and intelligent automation.
+            Estudiante de Ingeniería Mecatrónica en la Universidad Militar Nueva Granada, trabajando en manipulación robótica, sistemas de control, visión por computador, sistemas embebidos y automatización inteligente.
           </p>
 
           <div class="hero-actions">
-            <button onclick="openContactModal(event)" class="btn btn-primary open-contact-modal">
-              Contact for Research / PhD
+            <button onclick="openContactModal(event)" id="hero-contact-btn" class="btn btn-primary open-contact-modal">
+              Contacto para Investigación / Ph.D.
             </button>
-            <a href="#phd" class="btn btn-secondary">
-              Target Research Environments
+            <a href="#phd" id="hero-target-btn" class="btn btn-secondary">
+              Entornos Ph.D. Objetivo
             </a>
           </div>
         </div>
@@ -112,8 +122,8 @@
   <section id="about" class="section">
     <div class="container">
       <div class="section-header">
-        <span class="section-tag">// Research Profile</span>
-        <h2 class="section-title">About Me & Vision</h2>
+        <span id="about-tag" class="section-tag">// Perfil de Investigación</span>
+        <h2 id="about-title" class="section-title">Sobre Mí y Visión Científica</h2>
       </div>
 
       <div class="card">
@@ -128,8 +138,8 @@
   <section id="education" class="section">
     <div class="container">
       <div class="section-header">
-        <span class="section-tag">// Background</span>
-        <h2 class="section-title">Education & Research Groups</h2>
+        <span id="edu-tag" class="section-tag">// Formación</span>
+        <h2 id="edu-title" class="section-title">Educación y Grupos de Investigación</h2>
       </div>
 
       <div id="education-container">
@@ -142,8 +152,8 @@
   <section id="interests" class="section">
     <div class="container">
       <div class="section-header">
-        <span class="section-tag">// Focus Areas</span>
-        <h2 class="section-title">Research Interests & Horizons</h2>
+        <span id="interests-tag" class="section-tag">// Áreas de Enfoque</span>
+        <h2 id="interests-title" class="section-title">Intereses de Investigación y Horizontes</h2>
       </div>
 
       <div id="interests-container">
@@ -156,8 +166,8 @@
   <section id="research-projects" class="section">
     <div class="container">
       <div class="section-header">
-        <span class="section-tag">// Verifiable Investigation</span>
-        <h2 class="section-title">Scientific Research Projects</h2>
+        <span id="research-tag" class="section-tag">// Investigación Verificable</span>
+        <h2 id="research-title" class="section-title">Proyectos de Investigación Científica</h2>
       </div>
 
       <div id="research-projects-container">
@@ -170,8 +180,8 @@
   <section id="engineering-projects" class="section">
     <div class="container">
       <div class="section-header">
-        <span class="section-tag">// Systems & Manufacturing</span>
-        <h2 class="section-title">Applied Engineering & Prototyping Projects</h2>
+        <span id="eng-tag" class="section-tag">// Sistemas y Manufactura</span>
+        <h2 id="eng-title" class="section-title">Proyectos de Ingeniería Aplicada y Prototipado</h2>
       </div>
 
       <div id="engineering-projects-container">
@@ -184,8 +194,8 @@
   <section id="expertise" class="section">
     <div class="container">
       <div class="section-header">
-        <span class="section-tag">// Research Toolkit</span>
-        <h2 class="section-title">Research & Technical Expertise</h2>
+        <span id="expertise-tag" class="section-tag">// Toolkit Científico</span>
+        <h2 id="expertise-title" class="section-title">Especialidad Científica y Técnica</h2>
       </div>
 
       <div id="research-toolkit-container">
@@ -198,8 +208,8 @@
   <section id="phd" class="section">
     <div class="container">
       <div class="section-header">
-        <span class="section-tag">// Doctoral Strategy</span>
-        <h2 class="section-title">Target Research Environments & Faculty Alignment</h2>
+        <span id="phd-tag" class="section-tag">// Estrategia Doctoral</span>
+        <h2 id="phd-title" class="section-title">Entornos Ph.D. Objetivo y Alineación Académica</h2>
       </div>
 
       <div id="phd-targets-container">
@@ -212,8 +222,8 @@
   <section id="publications" class="section">
     <div class="container">
       <div class="section-header">
-        <span class="section-tag">// Academic Output</span>
-        <h2 class="section-title">Publications, Papers & Conferences</h2>
+        <span id="pub-tag" class="section-tag">// Producción Académica</span>
+        <h2 id="pub-title" class="section-title">Publicaciones, Ponencias y Congresos</h2>
       </div>
 
       <div id="publications-container">
@@ -226,8 +236,8 @@
   <section id="languages" class="section">
     <div class="container">
       <div class="section-header">
-        <span class="section-tag">// Communication</span>
-        <h2 class="section-title">Languages & Proficiency</h2>
+        <span id="lang-tag" class="section-tag">// Comunicación</span>
+        <h2 id="lang-title" class="section-title">Idiomas y Competencia</h2>
       </div>
 
       <div id="languages-container">
@@ -240,8 +250,8 @@
   <section id="skills" class="section">
     <div class="container">
       <div class="section-header">
-        <span class="section-tag">// Technical Matrix</span>
-        <h2 class="section-title">Programming, Hardware & Fabrication Capabilities</h2>
+        <span id="skills-tag" class="section-tag">// Matriz Técnica</span>
+        <h2 id="skills-title" class="section-title">Capacidades de Programación y Manufactura</h2>
       </div>
 
       <div id="skills-container">
@@ -254,8 +264,8 @@
   <section id="honors" class="section">
     <div class="container">
       <div class="section-header">
-        <span class="section-tag">// Recognition</span>
-        <h2 class="section-title">Awards & Leadership Roles</h2>
+        <span id="awards-tag" class="section-tag">// Reconocimiento</span>
+        <h2 id="awards-title" class="section-title">Premios y Roles de Liderazgo</h2>
       </div>
 
       <h3 style="font-size: 1.25rem; margin-bottom: 1rem; color: var(--accent-cyan-light);">Awards & Competitions</h3>
@@ -270,24 +280,24 @@
     </div>
   </section>
 
-  <!-- Interactive Contact Modal Popup (Fail-Safe Inline Event Handlers) -->
+  <!-- Interactive Contact Modal Popup -->
   <div id="contact-modal" class="modal-backdrop">
     <div class="modal-card">
       <button id="modal-close-btn" class="modal-close-btn" onclick="closeContactModal(event)" title="Close Popup">&times;</button>
 
-      <h3 class="modal-title">Contact & PhD Inquiry</h3>
-      <p class="modal-subtitle">Sebastián David Castañeda Moncada — Mechatronics Engineer</p>
+      <h3 id="modal-title" class="modal-title">Contacto y Consultas Ph.D.</h3>
+      <p id="modal-subtitle" class="modal-subtitle">Sebastián David Castañeda Moncada — Ingeniero Mecatrónico</p>
 
       <div class="modal-info-list">
         <!-- Email -->
         <div class="modal-info-item">
           <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
           <div style="flex: 1;">
-            <div class="modal-info-label">Direct Email</div>
+            <div id="modal-email-lbl" class="modal-info-label">Correo Electrónico</div>
             <div class="modal-info-value">ing.sebastiand.castaneda@gmail.com</div>
           </div>
           <button id="copy-email-btn" class="btn btn-secondary" style="padding: 0.3rem 0.7rem; font-size: 0.78rem;">
-            Copy Email
+            Copiar Email
           </button>
         </div>
 
@@ -295,7 +305,7 @@
         <div class="modal-info-item">
           <svg viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
           <div style="flex: 1;">
-            <div class="modal-info-label">Phone / WhatsApp</div>
+            <div id="modal-phone-lbl" class="modal-info-label">Teléfono / WhatsApp</div>
             <div class="modal-info-value">+57 320 327 0238</div>
           </div>
           <a href="https://wa.me/573203270238" target="_blank" class="btn btn-primary" style="padding: 0.3rem 0.7rem; font-size: 0.78rem;">
@@ -307,7 +317,7 @@
         <div class="modal-info-item">
           <svg viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
           <div style="flex: 1;">
-            <div class="modal-info-label">LinkedIn Profile</div>
+            <div id="modal-linkedin-lbl" class="modal-info-label">LinkedIn Profile</div>
             <div class="modal-info-value" style="font-size: 0.85rem;">Sebastián David Castañeda Moncada</div>
           </div>
           <a href="https://www.linkedin.com/in/sebasti%C3%A1n-david-casta%C3%B1eda-moncada-954444286" target="_blank" class="btn btn-secondary" style="padding: 0.3rem 0.7rem; font-size: 0.78rem;">
@@ -319,14 +329,14 @@
         <div class="modal-info-item">
           <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
           <div>
-            <div class="modal-info-label">Location & Availability</div>
-            <div class="modal-info-value">Bogotá, Colombia • Seeking PhD Entry 2027</div>
+            <div id="modal-loc-lbl" class="modal-info-label">Ubicación y Disponibilidad</div>
+            <div id="modal-loc-val" class="modal-info-value">Bogotá, Colombia • Buscando Ingreso a Ph.D. 2027</div>
           </div>
         </div>
       </div>
 
-      <p style="font-size: 0.82rem; color: var(--text-muted); line-height: 1.4; text-align: center;">
-        Available for research laboratory discussions, remote collaboration, and doctoral admissions interviews.
+      <p id="modal-notice" style="font-size: 0.82rem; color: var(--text-muted); line-height: 1.4; text-align: center;">
+        Disponible para discusiones con laboratorios de investigación, colaboración remota y entrevistas de admisión doctoral.
       </p>
     </div>
   </div>
