@@ -327,12 +327,12 @@ a:hover {
   transform: translateY(-2px);
 }
 
-/* Profile Card Widget */
+/* Profile Card Widget & Photo */
 .profile-card {
   background: var(--bg-card);
   border: 1px solid var(--border-color);
   border-radius: var(--radius-lg);
-  padding: 2rem;
+  padding: 2rem 1.5rem;
   text-align: center;
   box-shadow: var(--shadow-card);
   backdrop-filter: blur(12px);
@@ -351,13 +351,22 @@ a:hover {
 }
 
 .avatar-wrapper {
-  width: 120px;
-  height: 120px;
-  margin: 0 auto 1.25rem;
+  width: 140px;
+  height: 140px;
+  margin: 0 auto 1rem;
   border-radius: var(--radius-full);
   background: linear-gradient(135deg, var(--accent-cyan), var(--accent-indigo));
-  padding: 3px;
+  padding: 4px;
   position: relative;
+  box-shadow: 0 8px 25px rgba(6, 182, 212, 0.3);
+}
+
+.avatar-img {
+  width: 100%;
+  height: 100%;
+  border-radius: var(--radius-full);
+  object-fit: cover;
+  display: block;
 }
 
 .avatar-inner {
@@ -374,8 +383,23 @@ a:hover {
   font-family: var(--font-heading);
 }
 
+/* Age & Personal Meta Pills */
+.profile-age-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.25rem 0.75rem;
+  border-radius: var(--radius-full);
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--accent-cyan-light);
+  margin-bottom: 1rem;
+}
+
 .profile-name {
-  font-size: 1.3rem;
+  font-size: 1.35rem;
   margin-bottom: 0.25rem;
 }
 
@@ -392,8 +416,8 @@ a:hover {
 }
 
 .social-icon-btn {
-  width: 38px;
-  height: 38px;
+  width: 40px;
+  height: 40px;
   border-radius: var(--radius-md);
   background: var(--bg-secondary);
   border: 1px solid var(--border-color);
@@ -447,6 +471,12 @@ a:hover {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 1.75rem;
+}
+
+.grid-4 {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.25rem;
 }
 
 .card {
@@ -552,12 +582,6 @@ a:hover {
   gap: 0.6rem;
   border-bottom: 1px solid var(--border-color);
   padding-bottom: 0.5rem;
-}
-
-.robotics-card-title svg {
-  width: 20px;
-  height: 20px;
-  fill: currentColor;
 }
 
 .matrix-list {
@@ -745,6 +769,136 @@ a:hover {
   line-height: 1.5;
 }
 
+/* --- Languages Badges --- */
+.lang-card {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.25rem;
+}
+
+.lang-flag {
+  font-size: 2rem;
+  line-height: 1;
+}
+
+.lang-name {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.lang-level {
+  font-size: 0.85rem;
+  color: var(--accent-cyan-light);
+  font-weight: 500;
+}
+
+/* --- Interactive Contact Modal --- */
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.modal-backdrop.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.modal-card {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-glow);
+  border-radius: var(--radius-lg);
+  max-width: 550px;
+  width: 100%;
+  padding: 2.25rem;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7), var(--shadow-glow);
+  position: relative;
+  transform: translateY(20px);
+  transition: transform 0.3s ease;
+}
+
+.modal-backdrop.open .modal-card {
+  transform: translateY(0);
+}
+
+.modal-close-btn {
+  position: absolute;
+  top: 1.25rem;
+  right: 1.25rem;
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  font-size: 1.5rem;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.modal-close-btn:hover {
+  color: var(--accent-cyan);
+}
+
+.modal-title {
+  font-size: 1.6rem;
+  margin-bottom: 0.25rem;
+}
+
+.modal-subtitle {
+  font-size: 0.9rem;
+  color: var(--accent-cyan-light);
+  margin-bottom: 1.5rem;
+}
+
+.modal-info-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  margin-bottom: 1.75rem;
+}
+
+.modal-info-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.85rem 1rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+}
+
+.modal-info-icon {
+  font-size: 1.5rem;
+  line-height: 1;
+}
+
+.modal-info-label {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.modal-info-value {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  word-break: break-all;
+}
+
 /* --- Skills Badges Grid --- */
 .skills-category-title {
   font-size: 1.05rem;
@@ -807,7 +961,7 @@ a:hover {
   .hero-grid {
     grid-template-columns: 1fr;
   }
-  .grid-2, .grid-3 {
+  .grid-2, .grid-3, .grid-4 {
     grid-template-columns: 1fr;
   }
   .hero-title {
@@ -817,7 +971,7 @@ a:hover {
 
 @media (max-width: 768px) {
   .nav-links {
-    display: none; /* Can be toggled with mobile menu */
+    display: none;
   }
   .hero-title {
     font-size: 2.1rem;
@@ -833,7 +987,7 @@ a:hover {
     background: #ffffff !important;
     color: #000000 !important;
   }
-  .navbar, .theme-toggle-btn, .hero-actions, .project-filters, .footer {
+  .navbar, .theme-toggle-btn, .hero-actions, .project-filters, .footer, .modal-backdrop {
     display: none !important;
   }
   .card, .profile-card {

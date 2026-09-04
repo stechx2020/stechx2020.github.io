@@ -34,6 +34,7 @@
         <li><a href="#robotics" class="nav-link">Robotics</a></li>
         <li><a href="#projects" class="nav-link">Projects</a></li>
         <li><a href="#publications" class="nav-link">Publications</a></li>
+        <li><a href="#languages" class="nav-link">Languages</a></li>
         <li><a href="#phd" class="nav-link">PhD Goals</a></li>
       </ul>
 
@@ -41,8 +42,11 @@
         <button id="theme-toggle" class="theme-toggle-btn" title="Toggle Light/Dark Theme">
           <span id="theme-icon">🌙</span>
         </button>
+        <button href="#" class="btn btn-primary open-contact-modal" style="padding: 0.4rem 0.9rem; font-size: 0.85rem;">
+          ✉️ Contact
+        </button>
         <button onclick="window.print()" class="btn btn-secondary" style="padding: 0.4rem 0.8rem; font-size: 0.85rem;" title="Export CV to PDF">
-          🖨️ Export PDF
+          🖨️ PDF
         </button>
       </div>
     </div>
@@ -65,9 +69,9 @@
           </p>
 
           <div class="hero-actions">
-            <a id="contact-email-btn" href="mailto:u1804245@unimilitar.edu.co" class="btn btn-primary">
+            <button class="btn btn-primary open-contact-modal">
               ✉️ Contact for Research / PhD
-            </a>
+            </button>
             <a href="#phd" class="btn btn-secondary">
               🌏 Target PhD Labs
             </a>
@@ -76,21 +80,27 @@
 
         <!-- Profile Card Widget -->
         <div class="profile-card">
-          <div class="avatar-wrapper">
-            <div class="avatar-inner">SC</div>
+          <div id="profile-avatar-wrapper" class="avatar-wrapper">
+            <!-- Rendered by app.js (images/profile_picture.png) -->
           </div>
+          
+          <!-- Age & Birthdate Pill -->
+          <div id="profile-age-badge" class="profile-age-pill">
+            🎂 23 años (1 de Abril de 2003)
+          </div>
+
           <h3 class="profile-name">Sebastián Castañeda</h3>
           <p class="profile-univ">Universidad Militar Nueva Granada<br>Bogotá, Colombia</p>
 
           <div class="social-links">
-            <a href="https://github.com/" target="_blank" class="social-icon-btn" title="GitHub">
+            <a href="https://github.com/stechx2020" target="_blank" class="social-icon-btn" title="GitHub">
               <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
             </a>
-            <a href="https://linkedin.com/in/" target="_blank" class="social-icon-btn" title="LinkedIn">
+            <a id="hero-linkedin-link" href="https://www.linkedin.com/in/sebasti%C3%A1n-david-casta%C3%B1eda-moncada-954444286" target="_blank" class="social-icon-btn" title="LinkedIn">
               <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
             </a>
-            <a href="https://scholar.google.com/" target="_blank" class="social-icon-btn" title="Google Scholar">
-              🎓
+            <a href="https://wa.me/573203270238" target="_blank" class="social-icon-btn" title="WhatsApp Direct">
+              💬
             </a>
           </div>
         </div>
@@ -206,6 +216,20 @@
     </div>
   </section>
 
+  <!-- Languages Section -->
+  <section id="languages" class="section">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">// Communication</span>
+        <h2 class="section-title">Languages & Proficiency</h2>
+      </div>
+
+      <div id="languages-container">
+        <!-- Rendered by app.js -->
+      </div>
+    </div>
+  </section>
+
   <!-- Skills & Fabrication -->
   <section id="skills" class="section">
     <div class="container">
@@ -240,11 +264,72 @@
     </div>
   </section>
 
+  <!-- Interactive Contact Modal Popup -->
+  <div id="contact-modal" class="modal-backdrop">
+    <div class="modal-card">
+      <button id="modal-close-btn" class="modal-close-btn" title="Close Popup">&times;</button>
+
+      <h3 class="modal-title">Contact & PhD Inquiry</h3>
+      <p class="modal-subtitle">Sebastián David Castañeda Moncada — Mechatronics Engineer</p>
+
+      <div class="modal-info-list">
+        <!-- Direct Email -->
+        <div class="modal-info-item">
+          <div class="modal-info-icon">✉️</div>
+          <div style="flex: 1;">
+            <div class="modal-info-label">Direct Email</div>
+            <div class="modal-info-value">ing.sebastiand.castaneda@gmail.com</div>
+          </div>
+          <button id="copy-email-btn" class="btn btn-secondary" style="padding: 0.3rem 0.7rem; font-size: 0.78rem;">
+            Copy
+          </button>
+        </div>
+
+        <!-- Phone & WhatsApp -->
+        <div class="modal-info-item">
+          <div class="modal-info-icon">📱</div>
+          <div style="flex: 1;">
+            <div class="modal-info-label">Phone / WhatsApp</div>
+            <div class="modal-info-value">+57 320 327 0238</div>
+          </div>
+          <a href="https://wa.me/573203270238" target="_blank" class="btn btn-primary" style="padding: 0.3rem 0.7rem; font-size: 0.78rem;">
+            Chat WhatsApp
+          </a>
+        </div>
+
+        <!-- LinkedIn Profile -->
+        <div class="modal-info-item">
+          <div class="modal-info-icon">💼</div>
+          <div style="flex: 1;">
+            <div class="modal-info-label">LinkedIn Profile</div>
+            <div class="modal-info-value" style="font-size: 0.85rem;">Sebastián David Castañeda Moncada</div>
+          </div>
+          <a href="https://www.linkedin.com/in/sebasti%C3%A1n-david-casta%C3%A1eda-moncada-954444286" target="_blank" class="btn btn-secondary" style="padding: 0.3rem 0.7rem; font-size: 0.78rem;">
+            Open LinkedIn
+          </a>
+        </div>
+
+        <!-- Location & Availability -->
+        <div class="modal-info-item">
+          <div class="modal-info-icon">📍</div>
+          <div>
+            <div class="modal-info-label">Location & Availability</div>
+            <div class="modal-info-value">Bogotá, Colombia • Seeking PhD Entry 2027</div>
+          </div>
+        </div>
+      </div>
+
+      <p style="font-size: 0.82rem; color: var(--text-muted); line-height: 1.4; text-align: center;">
+        Available for research laboratory discussions, remote collaboration, and doctoral admissions interviews.
+      </p>
+    </div>
+  </div>
+
   <!-- Footer -->
   <footer class="footer">
     <div class="container">
       <p style="margin-bottom: 0.5rem; font-weight: 600; color: var(--text-primary);">
-        Sebastián Castañeda — Mechatronics Engineer & PhD Candidate
+        Sebastián David Castañeda Moncada — Mechatronics Engineer & PhD Applicant
       </p>
       <p style="margin-bottom: 1rem;">
         Universidad Militar Nueva Granada | VOLTA & IIED Research Groups

@@ -8,14 +8,19 @@
 const cvData = {
   personal: {
     name: "Sebastián Castañeda",
+    fullName: "Sebastián David Castañeda Moncada",
     title: "Mechatronics Engineer in Training",
     subtitle: "Robotics & Intelligent Automation Research",
     tagline: "Specializing in Robotic Manipulators, Advanced Control Systems, Kinematics/Dynamics, ROS2, and Biocomposite Industry 4.0 Materials.",
     statusBadge: "Graduating 2027 — Seeking PhD Positions (Japan, South Korea, Germany)",
     university: "Universidad Militar Nueva Granada",
-    email: "u1804245@unimilitar.edu.co",
-    github: "https://github.com/",
-    linkedin: "https://linkedin.com/in/",
+    email: "ing.sebastiand.castaneda@gmail.com",
+    phone: "+57 320 327 0238",
+    whatsappLink: "https://wa.me/573203270238",
+    birthDate: "2003-04-01", // YYYY-MM-DD for automatic age calculation
+    profileImg: "images/profile_picture.png",
+    github: "https://github.com/stechx2020",
+    linkedin: "https://www.linkedin.com/in/sebasti%C3%A1n-david-casta%C3%B1eda-moncada-954444286",
     scholar: "https://scholar.google.com/",
     location: "Bogotá, Colombia",
     bio: `Mechatronics Engineering student at Universidad Militar Nueva Granada, with active research and engineering experience in robotics, control systems, intelligent automation, embedded systems, computer vision, and advanced manufacturing.
@@ -295,8 +300,10 @@ I am interested in pursuing doctoral research in robotics, autonomous systems, i
   ],
 
   languages: [
-    { language: "Spanish", level: "Native" },
-    { language: "English", level: "B2 (Professional Working Proficiency / Academic)" }
+    { name: "Español (Spanish)", level: "Nativo / Native", flag: "🇨🇴" },
+    { name: "Inglés (English)", level: "B2 (Profesional / Académico)", flag: "🇬🇧" },
+    { name: "Japonés (Japanese)", level: "En progreso / In Progress", flag: "🇯🇵" },
+    { name: "Coreano (Korean)", level: "En progreso / In Progress", flag: "🇰🇷" }
   ]
 };
 

@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // 1. Theme Management (Dark / Light)
   initTheme();
 
-  // 2. Render Hero & Personal Info
+  // 2. Render Hero & Profile Card (Photo, Age, Links)
   renderHero(data.personal);
 
   // 3. Render Education & Research Groups
@@ -34,13 +34,19 @@ document.addEventListener('DOMContentLoaded', () => {
   // 8. Render Publications
   renderPublications(data.publications);
 
-  // 9. Render Skills
+  // 9. Render Languages
+  renderLanguages(data.languages);
+
+  // 10. Render Skills
   renderSkills(data.skills);
 
-  // 10. Render Awards & Leadership
+  // 11. Render Awards & Leadership
   renderAwardsAndLeadership(data.awards, data.leadership);
 
-  // 11. Setup Smooth Scroll & Active Nav Highlighting
+  // 12. Setup Contact Modal Popup
+  initContactModal(data.personal);
+
+  // 13. Setup Smooth Scroll & Active Nav Highlighting
   initNavScroll();
 });
 
@@ -70,6 +76,18 @@ function updateThemeIcon(theme) {
   }
 }
 
+/* --- Calculate Age dynamically --- */
+function calculateAge(birthDateString) {
+  const today = new Date();
+  const birthDate = new Date(birthDateString);
+  let age = today.getFullYear() - birthDate.getFullYear();
+  const m = today.getMonth() - birthDate.getMonth();
+  if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+    age--;
+  }
+  return age;
+}
+
 /* --- Render Hero --- */
 function renderHero(personal) {
   const nameEl = document.getElementById('hero-name');
@@ -77,14 +95,34 @@ function renderHero(personal) {
   const taglineEl = document.getElementById('hero-tagline');
   const badgeEl = document.getElementById('hero-badge-text');
   const bioEl = document.getElementById('about-bio');
-  const emailBtn = document.getElementById('contact-email-btn');
+  const avatarWrapper = document.getElementById('profile-avatar-wrapper');
+  const ageBadge = document.getElementById('profile-age-badge');
+  const linkedinBtn = document.getElementById('hero-linkedin-link');
 
   if (nameEl) nameEl.textContent = personal.name;
   if (titleEl) titleEl.textContent = personal.subtitle || personal.title;
   if (taglineEl) taglineEl.textContent = personal.tagline;
   if (badgeEl) badgeEl.textContent = personal.statusBadge;
   if (bioEl) bioEl.textContent = personal.bio;
-  if (emailBtn) emailBtn.href = `mailto:${personal.email}`;
+
+  if (linkedinBtn && personal.linkedin) {
+    linkedinBtn.href = personal.linkedin;
+  }
+
+  // Profile Image Render
+  if (avatarWrapper) {
+    if (personal.profileImg) {
+      avatarWrapper.innerHTML = `<img src="${personal.profileImg}" alt="${personal.name}" class="avatar-img">`;
+    } else {
+      avatarWrapper.innerHTML = `<div class="avatar-inner">SC</div>`;
+    }
+  }
+
+  // Calculate & Display Age
+  if (ageBadge && personal.birthDate) {
+    const age = calculateAge(personal.birthDate);
+    ageBadge.innerHTML = `🎂 <strong>${age} años</strong> (1 de Abril de 2003)`;
+  }
 }
 
 /* --- Render Education --- */
@@ -94,7 +132,6 @@ function renderEducation(educationList, groupsList) {
 
   let html = '';
   
-  // Education Degrees
   educationList.forEach(edu => {
     html += `
       <div class="card" style="margin-bottom: 1.25rem;">
@@ -110,7 +147,6 @@ function renderEducation(educationList, groupsList) {
     `;
   });
 
-  // Research Groups & Supervisors
   if (groupsList && groupsList.length > 0) {
     groupsList.forEach(grp => {
       html += `
@@ -214,7 +250,7 @@ function renderProjects(projectsList) {
   if (!container) return;
 
   let html = '';
-  projectsList.forEach((proj, idx) => {
+  projectsList.forEach((proj) => {
     html += `
       <div class="card project-card" data-tags="${proj.tags.join(',').toLowerCase()}">
         <div>
@@ -233,7 +269,6 @@ function renderProjects(projectsList) {
   });
   container.innerHTML = html;
 
-  // Filter Buttons Logic
   const filterBtns = document.querySelectorAll('.filter-btn');
   filterBtns.forEach(btn => {
     btn.addEventListener('click', () => {
@@ -281,6 +316,27 @@ function renderPublications(pubData) {
     `;
   });
 
+  container.innerHTML = html;
+}
+
+/* --- Render Languages --- */
+function renderLanguages(langList) {
+  const container = document.getElementById('languages-container');
+  if (!container) return;
+
+  let html = '<div class="grid-4">';
+  langList.forEach(l => {
+    html += `
+      <div class="card lang-card">
+        <div class="lang-flag">${l.flag}</div>
+        <div>
+          <div class="lang-name">${l.name}</div>
+          <div class="lang-level">${l.level}</div>
+        </div>
+      </div>
+    `;
+  });
+  html += '</div>';
   container.innerHTML = html;
 }
 
@@ -347,6 +403,51 @@ function renderAwardsAndLeadership(awardsList, leadershipList) {
     });
     html += '</div>';
     leadershipContainer.innerHTML = html;
+  }
+}
+
+/* --- Contact Modal Popup Logic --- */
+function initContactModal(personal) {
+  const modalBackdrop = document.getElementById('contact-modal');
+  const openBtns = document.querySelectorAll('.open-contact-modal');
+  const closeBtn = document.getElementById('modal-close-btn');
+  const copyEmailBtn = document.getElementById('copy-email-btn');
+
+  if (!modalBackdrop) return;
+
+  openBtns.forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      modalBackdrop.classList.add('open');
+    });
+  });
+
+  if (closeBtn) {
+    closeBtn.addEventListener('click', () => {
+      modalBackdrop.classList.remove('open');
+    });
+  }
+
+  modalBackdrop.addEventListener('click', (e) => {
+    if (e.target === modalBackdrop) {
+      modalBackdrop.classList.remove('open');
+    }
+  });
+
+  if (copyEmailBtn) {
+    copyEmailBtn.addEventListener('click', () => {
+      navigator.clipboard.writeText(personal.email).then(() => {
+        const origText = copyEmailBtn.textContent;
+        copyEmailBtn.textContent = "✓ Copied!";
+        copyEmailBtn.style.background = "var(--accent-emerald)";
+        copyEmailBtn.style.color = "#ffffff";
+        setTimeout(() => {
+          copyEmailBtn.textContent = origText;
+          copyEmailBtn.style.background = "";
+          copyEmailBtn.style.color = "";
+        }, 2000);
+      });
+    });
   }
 }
 
