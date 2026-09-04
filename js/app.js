@@ -22,14 +22,15 @@ document.addEventListener('DOMContentLoaded', () => {
   // 4. Render Research Interests
   renderResearchInterests(data.researchInterests);
 
-  // 5. Render Target PhD
-  renderTargetPhD(data.targetPhD);
+  // 5. Render Target Research Environments (PhD Strategy)
+  renderTargetEnvironments(data.targetEnvironments);
 
-  // 6. Render Robotics Matrix
-  renderRoboticsMatrix(data.roboticsMatrix);
+  // 6. Render Research & Technical Expertise (Toolkit Matrix)
+  renderResearchToolkit(data.researchToolkit);
 
-  // 7. Render Projects & Filters
-  renderProjects(data.projects);
+  // 7. Render Scientific Research Projects & Applied Engineering Projects
+  renderResearchProjects(data.researchProjects);
+  renderEngineeringProjects(data.engineeringProjects);
 
   // 8. Render Publications
   renderPublications(data.publications);
@@ -72,7 +73,7 @@ function initTheme() {
 function updateThemeIcon(theme) {
   const icon = document.getElementById('theme-icon');
   if (icon) {
-    icon.textContent = theme === 'dark' ? '🌙' : '☀️';
+    icon.textContent = theme === 'dark' ? 'Theme: Dark' : 'Theme: Light';
   }
 }
 
@@ -118,10 +119,10 @@ function renderHero(personal) {
     }
   }
 
-  // Calculate & Display Age
+  // Calculate & Display Age (No Emojis)
   if (ageBadge && personal.birthDate) {
     const age = calculateAge(personal.birthDate);
-    ageBadge.innerHTML = `🎂 <strong>${age} años</strong> (1 de Abril de 2003)`;
+    ageBadge.textContent = `${age} años (1 de Abril de 2003)`;
   }
 }
 
@@ -137,7 +138,7 @@ function renderEducation(educationList, groupsList) {
       <div class="card" style="margin-bottom: 1.25rem;">
         <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.5rem;">
           <h3 style="font-size: 1.25rem; color: var(--text-primary);">${edu.degree}</h3>
-          <span style="font-size: 0.85rem; padding: 0.25rem 0.75rem; background: var(--accent-cyan-glow); color: var(--accent-cyan-light); border-radius: var(--radius-full); font-weight: 600;">${edu.period}</span>
+          <span style="font-size: 0.82rem; padding: 0.25rem 0.75rem; background: var(--accent-cyan-glow); color: var(--accent-cyan-light); border-radius: var(--radius-full); font-weight: 600;">${edu.period}</span>
         </div>
         <p style="font-weight: 600; color: var(--accent-indigo-light); margin-bottom: 0.5rem;">${edu.institution} (${edu.location})</p>
         <ul style="list-style: disc; margin-left: 1.25rem; color: var(--text-secondary); font-size: 0.92rem;">
@@ -151,7 +152,7 @@ function renderEducation(educationList, groupsList) {
     groupsList.forEach(grp => {
       html += `
         <div class="card" style="border-left: 3px solid var(--accent-indigo);">
-          <h4 style="font-size: 1.1rem; color: var(--accent-cyan-light); margin-bottom: 0.4rem;">🔬 ${grp.name} (${grp.role})</h4>
+          <h4 style="font-size: 1.1rem; color: var(--accent-cyan-light); margin-bottom: 0.4rem;">${grp.name} — ${grp.role}</h4>
           <p style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 0.5rem;">
             <strong>Supervisors:</strong> ${grp.supervisors.join(', ')}
           </p>
@@ -177,7 +178,7 @@ function renderResearchInterests(interests) {
     html += `
       <div class="card">
         <h3 style="font-size: 1.15rem; margin-bottom: 0.75rem; color: ${isPrimary ? 'var(--accent-cyan-light)' : 'var(--accent-indigo-light)'};">
-          ${isPrimary ? '🎯 ' : '🚀 '} ${item.category}
+          ${item.category}
         </h3>
         <div class="interest-tag-cloud">
           ${item.topics.map(topic => `
@@ -191,51 +192,69 @@ function renderResearchInterests(interests) {
   container.innerHTML = html;
 }
 
-/* --- Render Target PhD --- */
-function renderTargetPhD(targetData) {
+/* --- Render Target Research Environments --- */
+function renderTargetEnvironments(targetData) {
   const container = document.getElementById('phd-targets-container');
   if (!container) return;
 
-  let html = `<p style="font-size: 1rem; color: var(--text-secondary); margin-bottom: 1.5rem; font-style: italic;">"${targetData.intent}"</p>`;
-  html += '<div class="grid-3">';
+  let html = '<div class="grid-3" style="margin-bottom: 2rem;">';
 
-  targetData.destinations.forEach(dest => {
+  targetData.countries.forEach(dest => {
     html += `
       <div class="card country-phd-card">
-        <h3 class="country-flag-title">${dest.country}</h3>
+        <div class="target-country-header">
+          <span>${dest.country}</span>
+          <span class="target-status-tag">${dest.status}</span>
+        </div>
         <ul class="univ-list">
           ${dest.universities.map(u => `<li class="univ-item">${u}</li>`).join('')}
         </ul>
       </div>
     `;
   });
-
   html += '</div>';
+
+  // Target Labs & Alignment
+  html += '<h3 style="font-size: 1.2rem; color: var(--accent-cyan-light); margin-bottom: 1rem;">Targeted Research Laboratories & Faculty Alignment</h3>';
+  html += '<div class="grid-3">';
+  targetData.targetLabs.forEach(lab => {
+    html += `
+      <div class="target-lab-card">
+        <div class="target-lab-title">${lab.lab}</div>
+        <div class="target-lab-inst">${lab.institution} (${lab.country})</div>
+        <div class="lab-detail-row"><span class="lab-detail-label">Research Topic:</span> ${lab.researchTopic}</div>
+        <div class="lab-detail-row"><span class="lab-detail-label">Scientific Alignment:</span> ${lab.alignment}</div>
+        <div class="lab-detail-row" style="margin-top: 0.5rem;"><span class="target-status-tag" style="background: rgba(6, 182, 212, 0.1); color: var(--accent-cyan-light); border-color: var(--accent-cyan-glow);">${lab.status}</span></div>
+      </div>
+    `;
+  });
+  html += '</div>';
+
   container.innerHTML = html;
 }
 
-/* --- Render Robotics Matrix --- */
-function renderRoboticsMatrix(matrix) {
-  const container = document.getElementById('robotics-matrix-container');
+/* --- Render Research & Technical Expertise (Toolkit Matrix) --- */
+function renderResearchToolkit(toolkit) {
+  const container = document.getElementById('research-toolkit-container');
   if (!container) return;
 
   const categories = [
-    { key: 'manipulators', title: 'Robotic Manipulators', icon: '🤖' },
-    { key: 'ros', title: 'ROS / ROS2 Ecosystem', icon: '⚙️' },
-    { key: 'matlabSimulink', title: 'MATLAB / Simscape Multibody', icon: '📐' },
-    { key: 'computerVision', title: 'Computer Vision & AI (YOLO)', icon: '👁️' },
-    { key: 'controlTheory', title: 'Advanced & Discrete Control', icon: '🎛️' },
-    { key: 'kinematicsDynamics', title: 'Kinematics & Dynamics (6 DOF)', icon: '🔄' }
+    { key: 'robotics', title: 'Robotics' },
+    { key: 'control', title: 'Control Theory' },
+    { key: 'perception', title: 'Perception & Vision' },
+    { key: 'computationalTools', title: 'Computational Tools' },
+    { key: 'hardware', title: 'Embedded Hardware' },
+    { key: 'manufacturing', title: 'Manufacturing & CAD' }
   ];
 
-  let html = '<div class="robotics-grid">';
+  let html = '<div class="toolkit-grid">';
   categories.forEach(cat => {
-    const items = matrix[cat.key] || [];
+    const items = toolkit[cat.key] || [];
     html += `
       <div class="card">
-        <h4 class="robotics-card-title"><span>${cat.icon}</span> ${cat.title}</h4>
-        <ul class="matrix-list">
-          ${items.map(item => `<li class="matrix-item">${item}</li>`).join('')}
+        <h4 class="toolkit-card-title">${cat.title}</h4>
+        <ul class="toolkit-list">
+          ${items.map(item => `<li class="toolkit-item">${item}</li>`).join('')}
         </ul>
       </div>
     `;
@@ -244,49 +263,112 @@ function renderRoboticsMatrix(matrix) {
   container.innerHTML = html;
 }
 
-/* --- Render Projects --- */
-function renderProjects(projectsList) {
-  const container = document.getElementById('projects-grid');
+/* --- Render Scientific Research Projects --- */
+function renderResearchProjects(researchList) {
+  const container = document.getElementById('research-projects-container');
   if (!container) return;
 
   let html = '';
-  projectsList.forEach((proj) => {
+  researchList.forEach(proj => {
     html += `
-      <div class="card project-card" data-tags="${proj.tags.join(',').toLowerCase()}">
-        <div>
-          <div class="project-tags">
-            ${proj.tags.map(t => `<span class="tag">${t}</span>`).join('')}
+      <div class="card research-card">
+        <div class="research-card-header">
+          <div>
+            <span class="type-pill">${proj.type}</span>
+            <h3 class="research-title" style="margin-top: 0.4rem;">${proj.title}</h3>
+            <p class="research-subtitle">${proj.subtitle}</p>
           </div>
-          <h3 class="project-title">${proj.title}</h3>
-          <div class="project-role">${proj.role}</div>
-          <p class="project-desc">${proj.description}</p>
-          <ul class="project-highlights">
-            ${proj.highlights.map(h => `<li>${h}</li>`).join('')}
-          </ul>
+        </div>
+
+        <div class="research-breakdown-grid">
+          <div class="breakdown-item">
+            <span class="breakdown-label">Problem</span>
+            <span class="breakdown-val">${proj.problem}</span>
+          </div>
+          <div class="breakdown-item">
+            <span class="breakdown-label">Methodology</span>
+            <span class="breakdown-val">${proj.methodology}</span>
+          </div>
+          <div class="breakdown-item">
+            <span class="breakdown-label">Mathematical Model</span>
+            <span class="breakdown-val">${proj.model}</span>
+          </div>
+          <div class="breakdown-item">
+            <span class="breakdown-label">Simulation Environment</span>
+            <span class="breakdown-val">${proj.simulation}</span>
+          </div>
+          <div class="breakdown-item">
+            <span class="breakdown-label">Quantitative Results</span>
+            <span class="breakdown-val">${proj.results}</span>
+          </div>
+          <div class="breakdown-item">
+            <span class="breakdown-label">Conclusions</span>
+            <span class="breakdown-val">${proj.conclusions}</span>
+          </div>
+        </div>
+
+        <div class="evidence-container">
+          <span class="evidence-label">Verifiable Evidence:</span>
+          ${proj.evidence.map(ev => `
+            <button class="btn-evidence" onclick="handleEvidenceClick('${ev.label}', '${ev.type}')">
+              [${getEvidencePrefix(ev.type)} ${ev.label}]
+            </button>
+          `).join('')}
         </div>
       </div>
     `;
   });
   container.innerHTML = html;
+}
 
-  const filterBtns = document.querySelectorAll('.filter-btn');
-  filterBtns.forEach(btn => {
-    btn.addEventListener('click', () => {
-      filterBtns.forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      const filter = btn.getAttribute('data-filter').toLowerCase();
+/* --- Render Engineering Projects --- */
+function renderEngineeringProjects(engineeringList) {
+  const container = document.getElementById('engineering-projects-container');
+  if (!container) return;
 
-      const cards = container.querySelectorAll('.project-card');
-      cards.forEach(card => {
-        const tags = card.getAttribute('data-tags');
-        if (filter === 'all' || tags.includes(filter)) {
-          card.style.display = 'flex';
-        } else {
-          card.style.display = 'none';
-        }
-      });
-    });
+  let html = '<div class="grid-2">';
+  engineeringList.forEach(proj => {
+    html += `
+      <div class="card" style="border-left: 3px solid var(--accent-indigo);">
+        <div style="margin-bottom: 0.75rem;">
+          <span class="type-pill engineering">${proj.type}</span>
+          <h3 class="research-title" style="margin-top: 0.4rem;">${proj.title}</h3>
+          <div style="font-size: 0.85rem; color: var(--accent-indigo-light); font-weight: 600;">${proj.role}</div>
+        </div>
+        <p style="font-size: 0.92rem; color: var(--text-secondary); margin-bottom: 0.75rem;">${proj.description}</p>
+        <ul class="project-highlights" style="margin-bottom: 1rem;">
+          ${proj.highlights.map(h => `<li>${h}</li>`).join('')}
+        </ul>
+
+        <div class="evidence-container">
+          <span class="evidence-label">Engineering Artifacts:</span>
+          ${proj.evidence.map(ev => `
+            <button class="btn-evidence" onclick="handleEvidenceClick('${ev.label}', '${ev.type}')">
+              [${getEvidencePrefix(ev.type)} ${ev.label}]
+            </button>
+          `).join('')}
+        </div>
+      </div>
+    `;
   });
+  html += '</div>';
+  container.innerHTML = html;
+}
+
+function getEvidencePrefix(type) {
+  switch (type) {
+    case 'pdf': return 'DOC';
+    case 'code': return 'CODE';
+    case 'video': return 'DEMO';
+    case 'cad': return 'CAD';
+    case 'photo': return 'IMG';
+    case 'award': return 'CERT';
+    default: return 'DATA';
+  }
+}
+
+function handleEvidenceClick(label, type) {
+  alert(`Evidence artifact requested: "${label}". Attach your document/code file to the repository folder and it will link directly!`);
 }
 
 /* --- Render Publications --- */
@@ -328,7 +410,6 @@ function renderLanguages(langList) {
   langList.forEach(l => {
     html += `
       <div class="card lang-card">
-        <div class="lang-flag">${l.flag}</div>
         <div>
           <div class="lang-name">${l.name}</div>
           <div class="lang-level">${l.level}</div>
@@ -346,17 +427,17 @@ function renderSkills(skillsData) {
   if (!container) return;
 
   const categories = [
-    { title: 'Programming Languages', list: skillsData.programming, icon: '💻' },
-    { title: 'Embedded Systems & Hardware', list: skillsData.embeddedHardware, icon: '🔌' },
-    { title: 'CAD & Advanced Fabrication', list: skillsData.cadFabrication, icon: '🛠️' },
-    { title: 'Electronics & PCB Design', list: skillsData.electronicsEDA, icon: '⚡' }
+    { title: 'Programming Languages', list: skillsData.programming },
+    { title: 'Embedded Systems & Hardware', list: skillsData.embeddedHardware },
+    { title: 'CAD & Advanced Fabrication', list: skillsData.cadFabrication },
+    { title: 'Electronics & PCB Design', list: skillsData.electronicsEDA }
   ];
 
   let html = '<div class="grid-2">';
   categories.forEach(cat => {
     html += `
       <div class="card">
-        <h4 class="skills-category-title">${cat.icon} ${cat.title}</h4>
+        <h4 class="skills-category-title">${cat.title}</h4>
         <div class="skills-badge-list">
           ${cat.list.map(s => `<span class="skill-badge">${s}</span>`).join('')}
         </div>
@@ -374,10 +455,10 @@ function renderAwardsAndLeadership(awardsList, leadershipList) {
 
   if (awardsContainer) {
     let html = '<div class="grid-2">';
-    awardsList.forEach(a => {
+    awardsList.forEach((a, idx) => {
       html += `
         <div class="card award-card">
-          <div class="award-trophy-icon">🏆</div>
+          <div class="award-badge-num">#${idx + 1}</div>
           <div>
             <h3 style="font-size: 1.15rem; margin-bottom: 0.25rem;">${a.title} (${a.year})</h3>
             <p style="font-size: 0.88rem; color: var(--accent-cyan-light); font-weight: 600; margin-bottom: 0.4rem;">${a.organization}</p>
@@ -395,7 +476,7 @@ function renderAwardsAndLeadership(awardsList, leadershipList) {
     leadershipList.forEach(l => {
       html += `
         <div class="card">
-          <h3 style="font-size: 1.1rem; color: var(--accent-indigo-light); margin-bottom: 0.3rem;">👑 ${l.role}</h3>
+          <h3 style="font-size: 1.1rem; color: var(--accent-indigo-light); margin-bottom: 0.3rem;">${l.role}</h3>
           <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.5rem;">${l.organization}</p>
           <p style="font-size: 0.88rem; color: var(--text-secondary);">${l.details}</p>
         </div>
@@ -438,7 +519,7 @@ function initContactModal(personal) {
     copyEmailBtn.addEventListener('click', () => {
       navigator.clipboard.writeText(personal.email).then(() => {
         const origText = copyEmailBtn.textContent;
-        copyEmailBtn.textContent = "✓ Copied!";
+        copyEmailBtn.textContent = "Copied!";
         copyEmailBtn.style.background = "var(--accent-emerald)";
         copyEmailBtn.style.color = "#ffffff";
         setTimeout(() => {
