@@ -387,7 +387,7 @@ a:hover {
   font-family: var(--font-heading);
 }
 
-/* Age Pill (Clean Text without Emoji) */
+/* Age Pill */
 .profile-age-pill {
   display: inline-block;
   padding: 0.25rem 0.8rem;
@@ -412,6 +412,7 @@ a:hover {
   margin-bottom: 1.25rem;
 }
 
+/* Social SVG Icons */
 .social-links {
   display: flex;
   justify-content: center;
@@ -419,8 +420,8 @@ a:hover {
 }
 
 .social-icon-btn {
-  width: 38px;
-  height: 38px;
+  width: 40px;
+  height: 40px;
   border-radius: var(--radius-md);
   background: var(--bg-secondary);
   border: 1px solid var(--border-color);
@@ -428,9 +429,13 @@ a:hover {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 0.85rem;
-  font-weight: 600;
   transition: var(--transition);
+}
+
+.social-icon-btn svg {
+  width: 20px;
+  height: 20px;
+  fill: currentColor;
 }
 
 .social-icon-btn:hover {
@@ -533,7 +538,7 @@ a:hover {
   color: var(--accent-cyan-light);
 }
 
-/* --- Research Projects (Scientific Rigor Layout) --- */
+/* --- Research Projects --- */
 .research-card {
   border-left: 3px solid var(--accent-cyan);
   display: flex;
@@ -581,7 +586,6 @@ a:hover {
   font-style: italic;
 }
 
-/* Scientific Breakdown Sections (Problem, Methodology, Model, Simulation, Results, Conclusions) */
 .research-breakdown-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -613,7 +617,6 @@ a:hover {
   line-height: 1.55;
 }
 
-/* --- Evidence Buttons Container --- */
 .evidence-container {
   display: flex;
   flex-wrap: wrap;
@@ -654,7 +657,7 @@ a:hover {
   transform: translateY(-2px);
 }
 
-/* --- Research & Technical Expertise (Toolkit Matrix) --- */
+/* --- Research & Technical Expertise --- */
 .toolkit-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -669,9 +672,6 @@ a:hover {
   letter-spacing: 0.06em;
   border-bottom: 1px solid var(--border-color);
   padding-bottom: 0.4rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
 }
 
 .toolkit-list {
@@ -847,42 +847,41 @@ a:hover {
   font-weight: 500;
 }
 
-/* --- Interactive Contact Modal --- */
+/* --- Interactive Contact Modal (Fail-Safe Styling) --- */
 .modal-backdrop {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.75);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  z-index: 2000;
-  display: flex;
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  background: rgba(0, 0, 0, 0.82) !important;
+  backdrop-filter: blur(14px) !important;
+  -webkit-backdrop-filter: blur(14px) !important;
+  z-index: 999999 !important;
+  display: none; /* Controlled by JS / .open class */
   align-items: center;
   justify-content: center;
   padding: 1.5rem;
   opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.3s ease;
+  transition: opacity 0.25s ease;
 }
 
 .modal-backdrop.open {
-  opacity: 1;
-  pointer-events: auto;
+  display: flex !important;
+  opacity: 1 !important;
 }
 
 .modal-card {
   background: var(--bg-secondary);
   border: 1px solid var(--border-glow);
   border-radius: var(--radius-lg);
-  max-width: 550px;
+  max-width: 540px;
   width: 100%;
   padding: 2.25rem;
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7), var(--shadow-glow);
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8), var(--shadow-glow);
   position: relative;
-  transform: translateY(20px);
-  transition: transform 0.3s ease;
+  transform: translateY(15px);
+  transition: transform 0.25s ease;
 }
 
 .modal-backdrop.open .modal-card {
@@ -931,6 +930,13 @@ a:hover {
   background: var(--bg-card);
   border: 1px solid var(--border-color);
   border-radius: var(--radius-md);
+}
+
+.modal-info-item svg {
+  width: 22px;
+  height: 22px;
+  fill: var(--accent-cyan-light);
+  flex-shrink: 0;
 }
 
 .modal-info-label {

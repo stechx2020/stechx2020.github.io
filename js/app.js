@@ -3,6 +3,31 @@
  * Renders data dynamically from window.cvData
  */
 
+// Global Fail-Safe Contact Modal Functions
+window.openContactModal = function(e) {
+  if (e && e.preventDefault) e.preventDefault();
+  const modalBackdrop = document.getElementById('contact-modal');
+  if (modalBackdrop) {
+    modalBackdrop.classList.add('open');
+    modalBackdrop.style.display = 'flex';
+    setTimeout(() => {
+      modalBackdrop.style.opacity = '1';
+    }, 10);
+  }
+};
+
+window.closeContactModal = function(e) {
+  if (e && e.preventDefault) e.preventDefault();
+  const modalBackdrop = document.getElementById('contact-modal');
+  if (modalBackdrop) {
+    modalBackdrop.classList.remove('open');
+    modalBackdrop.style.opacity = '0';
+    setTimeout(() => {
+      modalBackdrop.style.display = 'none';
+    }, 250);
+  }
+};
+
 document.addEventListener('DOMContentLoaded', () => {
   const data = window.cvData;
   if (!data) {
@@ -10,7 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
     return;
   }
 
-  // 1. Setup Contact Modal Popup IMMEDIATELY so buttons always work
+  // 1. Setup Contact Modal Popup
   initContactModal(data.personal);
 
   // 2. Theme Management (Dark / Light)
@@ -122,7 +147,7 @@ function renderHero(personal) {
     }
   }
 
-  // Calculate & Display Age (No Emojis)
+  // Calculate & Display Age
   if (ageBadge && personal.birthDate) {
     const age = calculateAge(personal.birthDate);
     ageBadge.textContent = `${age} años (1 de Abril de 2003)`;
@@ -219,7 +244,6 @@ function renderTargetEnvironments(targetData) {
   }
   html += '</div>';
 
-  // Target Labs & Alignment
   if (targetData.targetLabs) {
     html += '<h3 style="font-size: 1.2rem; color: var(--accent-cyan-light); margin-bottom: 1rem;">Targeted Research Laboratories & Faculty Alignment</h3>';
     html += '<div class="grid-3">';
@@ -508,27 +532,19 @@ function initContactModal(personal) {
   const closeBtn = document.getElementById('modal-close-btn');
   const copyEmailBtn = document.getElementById('copy-email-btn');
 
-  if (!modalBackdrop) {
-    console.error("contact-modal backdrop element not found.");
-    return;
-  }
+  if (!modalBackdrop) return;
 
   openBtns.forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      e.preventDefault();
-      modalBackdrop.classList.add('open');
-    });
+    btn.addEventListener('click', window.openContactModal);
   });
 
   if (closeBtn) {
-    closeBtn.addEventListener('click', () => {
-      modalBackdrop.classList.remove('open');
-    });
+    closeBtn.addEventListener('click', window.closeContactModal);
   }
 
   modalBackdrop.addEventListener('click', (e) => {
     if (e.target === modalBackdrop) {
-      modalBackdrop.classList.remove('open');
+      window.closeContactModal(e);
     }
   });
 
